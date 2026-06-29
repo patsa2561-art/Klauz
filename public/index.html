@@ -292,6 +292,36 @@
   footer.foot a { color: var(--text-2); }
   footer.foot .brand-line { font-family: var(--serif); font-size: 14px; color: var(--text-2); margin-bottom: 4px; }
 
+  /* trust / privacy banner */
+  .trust { margin: 28px 0 4px; }
+  .trust-card {
+    background: linear-gradient(135deg, var(--accent-soft) 0%, var(--surface) 100%);
+    border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border));
+    border-radius: var(--r-lg);
+    padding: 22px 26px;
+    box-shadow: var(--shadow-sm);
+  }
+  .trust-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .trust-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--accent); color: white;
+    display: grid; place-items: center; font-size: 18px;
+    box-shadow: 0 4px 12px rgb(184 69 31 / .25);
+    flex-shrink: 0;
+  }
+  .trust-title { font-family: var(--serif); font-size: 19px; font-weight: 600; margin: 0; letter-spacing: -.01em; }
+  .trust-intro { color: var(--text-2); margin: 0 0 14px; font-size: 14.5px; line-height: 1.6; }
+  .trust-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .trust-pill {
+    background: var(--surface);
+    border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--border));
+    border-radius: var(--r-pill);
+    padding: 6px 14px;
+    font-size: 12.5px; font-weight: 500;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
   /* tier badges (inline pill — PROVEN/CONSENSUS/ABSTAIN) */
   .tier-chip {
     display: inline-block;
@@ -346,6 +376,22 @@
   <section class="hero">
     <h1 class="hero-title" data-i18n="hero_title"></h1>
     <p class="hero-sub" data-i18n="tagline"></p>
+  </section>
+
+  <section class="trust">
+    <div class="trust-card">
+      <div class="trust-head">
+        <div class="trust-icon">🔒</div>
+        <h2 class="trust-title" data-i18n="trust_title"></h2>
+      </div>
+      <p class="trust-intro" data-i18n="trust_intro"></p>
+      <div class="trust-pills">
+        <span class="trust-pill" data-i18n="trust_pt1"></span>
+        <span class="trust-pill" data-i18n="trust_pt2"></span>
+        <span class="trust-pill" data-i18n="trust_pt3"></span>
+        <span class="trust-pill" data-i18n="trust_pt4"></span>
+      </div>
+    </div>
   </section>
 
   <div id="capbar"></div>
@@ -412,8 +458,14 @@ const I18N = {
   en: {
     hero_title: 'Does your edit really change the <em>meaning</em>?',
     tagline: 'Drop the before & after of any contract — Klauz tells you what an edit <b>really changed</b> (the meaning, not just the words) and <b>who it favors</b>.',
-    priv: '● 100% local — your documents never leave this machine',
-    foot_line: '100% local · documents never leave this machine (or your server) · MIT licensed',
+    priv: '🔒 HTTPS · in-memory only · zero document storage',
+    trust_title: 'Private by design — only you see your documents',
+    trust_intro: 'Klauz processes your documents in memory only and discards them immediately. We do not store, log, or read the content of any file you upload. Nobody but you ever sees what you compare.',
+    trust_pt1: '🔒 In-memory only',
+    trust_pt2: '🚫 Zero document storage',
+    trust_pt3: '👁 You alone see content',
+    trust_pt4: '🌐 HTTPS end-to-end',
+    foot_line: 'Documents processed in-memory · never stored or logged · HTTPS · MIT licensed',
     legend_title: 'What each button does:',
     leg_audit: 'Check <b>ONE</b> document clause-by-clause for risky terms (no second version needed).',
     leg_lint: 'Find structural defects — dangling references, unfilled blanks, leftover TBDs. Pure rules, no AI.',
@@ -486,8 +538,14 @@ const I18N = {
   th: {
     hero_title: 'การแก้ของคุณ <em>เปลี่ยนความหมาย</em> จริงไหม?',
     tagline: 'วางสัญญา 2 ฉบับ (ก่อน–หลัง) — Klauz บอกว่าการแก้ <b>เปลี่ยนความหมายจริงไหม</b> (ไม่ใช่แค่คำ) และ <b>เอียงเข้าข้างใคร</b>',
-    priv: '● ทำงานในเครื่อง 100% — เอกสารไม่ออกจากเครื่องคุณ',
-    foot_line: 'ทำงานในเครื่อง 100% · เอกสารไม่ออกจากเครื่อง (หรือ server ของคุณ) · MIT',
+    priv: '🔒 HTTPS · ในหน่วยความจำเท่านั้น · ไม่เก็บเอกสาร',
+    trust_title: 'ออกแบบให้เป็นส่วนตัว — มีแค่คุณเท่านั้นที่เห็นเอกสาร',
+    trust_intro: 'Klauz ประมวลผลเอกสารคุณในหน่วยความจำเท่านั้น แล้วทิ้งทันที — เราไม่เก็บ ไม่บันทึก ไม่อ่านเนื้อหาไฟล์ที่คุณอัปโหลด ไม่มีใครเห็นสิ่งที่คุณเปรียบเทียบนอกจากตัวคุณเอง',
+    trust_pt1: '🔒 ในหน่วยความจำเท่านั้น',
+    trust_pt2: '🚫 ไม่เก็บเอกสาร',
+    trust_pt3: '👁 มีแค่คุณที่เห็นเนื้อหา',
+    trust_pt4: '🌐 HTTPS ทั้งเส้นทาง',
+    foot_line: 'ประมวลผลในหน่วยความจำ · ไม่เก็บ/ไม่บันทึก · HTTPS · MIT',
     legend_title: 'แต่ละปุ่มทำอะไร:',
     leg_audit: 'ตรวจสัญญา <b>ฉบับเดียว</b> ทีละข้อ หาข้อเสี่ยง (ไม่ต้องมี 2 ฉบับ)',
     leg_lint: 'หาจุดบกพร่องเชิงโครงสร้าง — อ้างอิงค้าง, ช่องว่างไม่กรอก, TBD ตกค้าง ใช้กฎล้วน ไม่มี AI',
