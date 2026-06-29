@@ -62,7 +62,9 @@ export function serve(port = 7700, opts = {}) {
         return res.end(ADMIN_HTML);
       }
 
-      if (req.method === 'GET' && (req.url === '/' || req.url === '/index.html')) {
+      // serve the SPA on / and /index.html (query strings ok: /?utm=... still works)
+      const _pn = (req.url || '').split('?')[0];
+      if (req.method === 'GET' && (_pn === '/' || _pn === '/index.html')) {
         res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
         return res.end(HTML);
       }
