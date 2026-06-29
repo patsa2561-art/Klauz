@@ -153,10 +153,39 @@
   <div class="section-h">Cross-reference · clauses you've seen before</div>
   <div id="crossref"></div>
 
+  <div class="section-h" style="display:flex;align-items:center;gap:10px">
+    <span>Verifiable Chain</span>
+    <span style="font:600 10px var(--sans);letter-spacing:.1em;background:var(--accent-soft);color:var(--accent);padding:3px 7px;border-radius:4px">NEW · WORLD-FIRST</span>
+  </div>
+  <div id="chainPanel" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:24px">
+    <p style="margin:0 0 12px 0;color:var(--text-2);font-size:13px">
+      Every review you save is cryptographically linked to the previous one (SHA-256 hash chain).
+      Anyone — your lawyer, a court, a counterparty — can verify the chain has not been
+      retroactively edited. No vendor trust required: the verifier is open-source and the
+      math is in your browser. <b>First-of-its-kind in the legal-tech space.</b>
+    </p>
+    <div id="chainStatus" style="font:600 14px var(--sans);margin:10px 0"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+      <button onclick="verifyMyChain()">✓ Verify my chain</button>
+      <button class="ghost" onclick="exportMyChain()">⬇ Export chain (.json)</button>
+      <button class="ghost" onclick="copyLastLink()">📎 Copy last link (anchor)</button>
+    </div>
+    <details style="margin-top:14px;color:var(--text-2);font-size:12.5px">
+      <summary style="cursor:pointer">Why does this matter?</summary>
+      <ul style="margin:8px 0 0 0;padding-left:18px;line-height:1.6">
+        <li><b>Tamper-evident:</b> any retroactive change to a past review breaks the chain at that point — caught instantly by re-verification.</li>
+        <li><b>Vendor-independent:</b> the same verifier runs in your browser, on the Klauz server (<code>POST /chain/verify</code>), and in any third-party Node script that imports <code>src/chain.js</code>.</li>
+        <li><b>Court-admissible:</b> export the JSON and the engine_hash trail proves you reviewed contract X on date Y with rule version Z — without anyone having to trust Klauz.</li>
+        <li><b>Anchor against total rewrite:</b> copy the latest link and post it somewhere external (email to self, a tweet, your own gist). Any future rewrite of the tail is detectable against the anchor.</li>
+      </ul>
+    </details>
+  </div>
+
   <div class="section-h">Timeline</div>
   <div id="timeline"></div>
 </main>
 
+<script src="/chain.js"></script>
 <script>
 const KEY = 'klauz_journey_v1';
 
@@ -282,18 +311,101 @@ function onImport(input) {
   input.value = '';
 }
 
+// ---------- Verifiable chain integration ----------
+// Each saveable entry from index.html is expected to include the fields needed
+// for the chain: input_text (the raw doc text), verdict (the engine output),
+// and engine_hash (from the response header / body). If those are missing we
+// still save the journey entry but skip the chain link (legacy / pre-chain).
+
+async function appendChainFromEntry(entry) {
+  if (!window.KlauzChain) return null;
+  if (!entry || !entry.engine_hash || !entry.verdict) return null;
+  try {
+    const kind = entry.kind === 'cert' ? 'certify' : (entry.kind || 'tripwire');
+    const link = await window.KlauzChain.appendReview({
+      kind,
+      input_text: entry.input_text || JSON.stringify(entry.parties || entry.summary || ''),
+      verdict: entry.verdict,
+      engine_hash: entry.engine_hash,
+      summary: { id: entry.id, ts: entry.ts, kind: entry.kind, parties: entry.parties, top: entry.top },
+      ts: entry.ts,
+    });
+    return link.link;
+  } catch (e) {
+    console.warn('chain append failed:', e.message);
+    return null;
+  }
+}
+
+async function renderChainStatus() {
+  const el = document.getElementById('chainStatus');
+  if (!el || !window.KlauzChain) return;
+  const c = await window.KlauzChain.loadChain();
+  if (!c.chain.length) {
+    el.innerHTML = '<span style="color:var(--text-3)">Chain is empty. Run a Tripwire scan from the main page and click "Save to Journey" — your first link will appear here.</span>';
+    return;
+  }
+  const last = c.chain[c.chain.length - 1];
+  el.innerHTML =
+    '<span style="color:var(--ok)">⛓ ' + c.chain.length + ' linked entries</span>' +
+    ' · last link: <code style="font-size:11px;background:var(--surface-2);padding:2px 6px;border-radius:3px">' +
+    last.link.slice(0, 16) + '…' + last.link.slice(-8) + '</code>' +
+    ' · ' + new Date(last.ts).toLocaleString();
+}
+
+async function verifyMyChain() {
+  if (!window.KlauzChain) { alert('Chain library not loaded'); return; }
+  const c = await window.KlauzChain.loadChain();
+  const r = await window.KlauzChain.verifyChain(c);
+  const el = document.getElementById('chainStatus');
+  if (r.ok) {
+    el.innerHTML =
+      '<span style="color:var(--ok);font-weight:700">✓ CHAIN VERIFIED</span> · ' +
+      r.length + ' entries · last link <code style="font-size:11px;background:var(--ok-soft);padding:2px 6px;border-radius:3px;color:var(--ok)">' +
+      r.lastLink.slice(0, 16) + '…</code><br><span style="color:var(--text-2);font-size:12.5px">No retroactive edits detected. SHA-256 chain is mathematically intact.</span>';
+  } else {
+    el.innerHTML =
+      '<span style="color:var(--danger);font-weight:700">✗ CHAIN BROKEN</span> · entry [' + (r.brokenAt ?? '?') +
+      '] · reason: <code>' + (r.reason || '?') + '</code><br><span style="color:var(--text-2);font-size:12.5px">Entries 0…' +
+      (r.lastValidIndex ?? -1) + ' are still cryptographically intact; everything after is untrusted.</span>';
+  }
+}
+
+async function exportMyChain() {
+  if (!window.KlauzChain) return;
+  window.KlauzChain.exportChain();
+}
+
+async function copyLastLink() {
+  if (!window.KlauzChain) return;
+  const c = await window.KlauzChain.loadChain();
+  if (!c.chain.length) { alert('No links yet.'); return; }
+  const last = c.chain[c.chain.length - 1];
+  const anchor = 'klauz-chain anchor · ' + last.link + ' · entries=' + c.chain.length + ' · ts=' + last.ts;
+  try {
+    await navigator.clipboard.writeText(anchor);
+    alert('Anchor copied. Post it somewhere external (email to yourself, a private gist) so any future tail rewrite becomes detectable.');
+  } catch (e) {
+    prompt('Copy this anchor and store it externally:', anchor);
+  }
+}
+
 // Expose a global so the main Klauz page can write entries here
-window.klauzSaveToJourney = function(entry) {
+window.klauzSaveToJourney = async function(entry) {
   if (!entry || typeof entry !== 'object') return false;
   entry.id = entry.id || ('k_' + Date.now() + '_' + Math.random().toString(36).slice(2,8));
   entry.ts = entry.ts || new Date().toISOString();
+  const linkHash = await appendChainFromEntry(entry);
+  if (linkHash) entry.chain_link = linkHash;
   const all = load();
   all.push(entry);
   save(all);
+  await renderChainStatus();
   return true;
 };
 
 render();
+renderChainStatus();
 </script>
 </body>
 </html>

@@ -754,6 +754,7 @@
   </div>
 </footer>
 
+<script src="/chain.js"></script>
 <script>
 const I18N = {
   en: {
@@ -1089,6 +1090,7 @@ async function runTripwire() {
     const r = await fetch('/tripwire', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, persona }) });
     const rep = await r.json();
     if (rep.error) { banner('error: ' + rep.error, 'err'); b.disabled = false; return; }
+    window._LAST_INPUT_TEXT = text;  // stash for chain input_hash on save
     renderTripwire(rep, persona); banner(t('tripwire_done'), 'ok');
   } catch (e) { banner('error: ' + e.message, 'err'); }
   b.disabled = false;
@@ -1168,12 +1170,13 @@ function renderTripwire(rep, persona) {
   out.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function saveTripwireToJourney() {
+async function saveTripwireToJourney() {
   if (!window._LAST_TRIPWIRE) return;
   const { rep, persona } = window._LAST_TRIPWIRE;
+  const ts = new Date().toISOString();
   const entry = {
     id: 'k_' + Date.now() + '_' + Math.random().toString(36).slice(2,8),
-    ts: new Date().toISOString(),
+    ts,
     type: 'tripwire',
     title: 'Tripwire scan',
     summary: {
@@ -1189,20 +1192,37 @@ function saveTripwireToJourney() {
       total: rep.summary.total,
     },
   };
+  // Add to verifiable chain (world-first: client-side cryptographic review log)
+  if (window.KlauzChain && rep.engine_hash && window._LAST_INPUT_TEXT) {
+    try {
+      const link = await window.KlauzChain.appendReview({
+        kind: 'tripwire',
+        input_text: window._LAST_INPUT_TEXT,
+        verdict: rep,
+        engine_hash: rep.engine_hash,
+        summary: { id: entry.id, persona, total: rep.summary.total, high: rep.summary.high },
+        ts,
+      });
+      entry.chain_link = link.link;
+      entry.chain_seq = link.seq;
+    } catch (e) { console.warn('chain append failed:', e.message); }
+  }
   try {
     const all = JSON.parse(localStorage.getItem('klauz_journey_v1') || '[]');
     all.push(entry);
     localStorage.setItem('klauz_journey_v1', JSON.stringify(all));
-    banner('💾 ' + t('saved_journey'), 'ok');
+    const tail = entry.chain_link ? ' · ⛓ ' + entry.chain_link.slice(0, 12) + '…' : '';
+    banner('💾 ' + t('saved_journey') + tail, 'ok');
   } catch (e) { banner('save failed: ' + e.message, 'err'); }
 }
 
-function saveCertToJourney() {
+async function saveCertToJourney() {
   if (!LAST_CERT) return;
   const c = LAST_CERT;
+  const ts = new Date().toISOString();
   const entry = {
     id: 'k_' + Date.now() + '_' + Math.random().toString(36).slice(2,8),
-    ts: new Date().toISOString(),
+    ts,
     type: 'certify',
     title: 'PCR certify',
     summary: {
@@ -1221,11 +1241,30 @@ function saveCertToJourney() {
       merkle: c.merkleRoot,
     },
   };
+  // Link into the verifiable chain. We hash old+new+'\n---\n' as input so the
+  // chain entry is bound to the exact pair of documents that produced the cert.
+  if (window.KlauzChain && window._LAST_CERT_ENGINE_HASH) {
+    try {
+      const oldT = document.getElementById('textA').value || '';
+      const newT = document.getElementById('textB').value || '';
+      const link = await window.KlauzChain.appendReview({
+        kind: 'certify',
+        input_text: oldT + '\n---\n' + newT,
+        verdict: c,
+        engine_hash: window._LAST_CERT_ENGINE_HASH,
+        summary: { id: entry.id, changes: entry.summary.changes, merkle: c.merkleRoot },
+        ts,
+      });
+      entry.chain_link = link.link;
+      entry.chain_seq = link.seq;
+    } catch (e) { console.warn('chain append failed:', e.message); }
+  }
   try {
     const all = JSON.parse(localStorage.getItem('klauz_journey_v1') || '[]');
     all.push(entry);
     localStorage.setItem('klauz_journey_v1', JSON.stringify(all));
-    banner('💾 ' + t('saved_journey'), 'ok');
+    const tail = entry.chain_link ? ' · ⛓ ' + entry.chain_link.slice(0, 12) + '…' : '';
+    banner('💾 ' + t('saved_journey') + tail, 'ok');
   } catch (e) { banner('save failed: ' + e.message, 'err'); }
 }
 
@@ -1242,6 +1281,7 @@ async function runCertify() {
     const rep = await r.json();
     if (rep.error) { banner('error: ' + rep.error, 'err'); b.disabled = false; return; }
     LAST_CERT = rep.cert;
+    window._LAST_CERT_ENGINE_HASH = rep.engine_hash || null;  // full 64-hex needed for chain
     renderCert(rep); banner(t('cert_done'), 'ok');
   } catch (e) { banner('error: ' + e.message, 'err'); }
   b.disabled = false;

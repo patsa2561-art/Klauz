@@ -164,7 +164,7 @@ export function serve(port = 7700, opts = {}) {
             en: describe(e, 'en'), th: describe(e, 'th'),
           }));
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ cert, rows, capability: { llm: cap.llm, judge: cap.judge, mode: cap.mode } }));
+        return res.end(JSON.stringify({ cert, rows, capability: { llm: cap.llm, judge: cap.judge, mode: cap.mode }, engine_hash: ruleManifest().engine_hash }));
       }
       if (req.method === 'POST' && req.url === '/verify') {
         const body = safeParseBody(await readBodyCapped(req));
@@ -195,6 +195,26 @@ export function serve(port = 7700, opts = {}) {
         const { identifyTemplates } = await import('./templates.js');
         res.writeHead(200, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ matches: identifyTemplates(body.text || ''), engine_hash: ruleManifest().engine_hash }));
+      }
+      if (req.method === 'POST' && req.url === '/chain/verify') {
+        // Independent verifier for a Klauz Chain. Stateless — purely deterministic.
+        // Lawyers / auditors / counterparties can POST a user's exported chain
+        // and get a structured report without trusting the user's browser.
+        const body = safeParseBody(await readBodyCapped(req));
+        const { verifyChain, describeVerification } = await import('./chain.js');
+        const r = verifyChain(body.chain || null);
+        const report = describeVerification(r, body.chain || { chain: [] });
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ result: r, report, engine_hash: ruleManifest().engine_hash }));
+      }
+      if (req.method === 'GET' && req.url === '/chain.js') {
+        // Browser-side chain primitives served from /chain.js so journey.html
+        // can <script src="/chain.js"> without bundling.
+        try {
+          const js = fs.readFileSync(path.join(__dirname, '..', 'public', 'chain.js'), 'utf8');
+          res.writeHead(200, { 'Content-Type': 'application/javascript; charset=utf-8' });
+          return res.end(js);
+        } catch (e) { /* fall through to 404 */ }
       }
       if (req.method === 'GET' && _pn === '/journey') {
         // Personal Klauz Graph — client-side localStorage page (privacy preserving:
