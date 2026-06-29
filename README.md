@@ -1,122 +1,159 @@
-# ⚖ Klauz
+<p align="center">
+  <img src="docs/banner.svg" alt="Klauz — does your edit really change the meaning?" width="100%">
+</p>
 
-**git เทียบตัวอักษร — Klauz เทียบ "ความหมาย"**
+<h1 align="center">⚖ Klauz</h1>
+<p align="center">
+  <i>Klauz</i> · /klaʊz/ · say it <b>"klowz"</b> (rhymes with <i>rows</i>) · ไทย: <b>เคลาซ์</b>
+</p>
+<p align="center">
+  <b>Catch contract edits that look innocent but flip obligations — and tell you who they favor.</b>
+</p>
 
-แก้สัญญา 1 คำ `shall → may` = git บอก "เปลี่ยน 1 คำ" แต่จริงๆ **ภาระผูกพันพลิกจาก "บังคับ" เป็น "ทางเลือก"** — Klauz จับสิ่งนี้ และทำงาน **100% ในเครื่องคุณ** (เอกสารไม่ออกไปไหน)
-
-> **Klauz** is the product brand. The CLI binary, file paths, and internal API stay as `meaningdiff` (code name — like Claude/Anthropic).
-
----
-
-## ใช้ยังไง (ง่ายสุด ไม่ต้องเปิด terminal)
-
-**ทางที่ง่ายที่สุด — ไม่ต้องลงอะไรเลย (Windows) / Zero-install:**
-1. แตกไฟล์ **`meaningdiff-portable-win-x64.zip`** ที่ไหนก็ได้ / *unzip it anywhere*
-2. ดับเบิลคลิก **`meaningdiff.bat`** → เบราว์เซอร์เปิดเอง / *double-click → browser opens automatically*
-3. ลากไฟล์เข้าไป → กดปุ่ม → อ่านผล / *drop a file → click a button → read the result*
-
-> 📦 zip นี้มี Node ในตัว — **ไม่ต้องติดตั้ง Node / ไม่ต้องต่อเน็ต** · เอกสารไม่ออกจากเครื่อง
-> *(bundles Node — no install, no internet, documents stay on your machine)*
-> สร้าง zip เอง: `powershell -File build-portable.ps1`
-
-**ถ้ามี Node อยู่แล้ว (dev):** ดับเบิลคลิก `meaningdiff.bat` / `meaningdiff.command` ได้เลย
-> โหมดฉลาด (ออปชัน): [Ollama](https://ollama.com) → `ollama pull gemma3:12b` · ไม่มีก็ยังได้ผลแบบพิสูจน์ได้ครบ
+<p align="center">
+  <a href="https://klauz.space"><b>🌐 Live demo → klauz.space</b></a>
+  &nbsp;·&nbsp;
+  <a href="#-quick-start">Run locally</a>
+  &nbsp;·&nbsp;
+  <a href="#-how-it-works">How it works</a>
+  &nbsp;·&nbsp;
+  <a href="#-privacy">Privacy</a>
+</p>
 
 ---
 
-## ติดตั้งจาก git (สำหรับ dev) · Install from git
+## The problem in one picture
 
-```bash
-# 1) ลง Node.js (LTS) ครั้งเดียวจาก https://nodejs.org  (install Node.js LTS once)
-git clone <repo-url> meaningdiff
-cd meaningdiff
-npm ci                      # ติดตั้ง dependencies (ตรงตาม lockfile)
-node bin/meaningdiff.js serve
-# เปิด http://127.0.0.1:7700  (หรือดับเบิลคลิก meaningdiff.bat / .command)
-```
+Git tells you a word changed. It doesn't tell you a contract just flipped.
 
-> ✅ Certify / Lint / Merge / Compare พื้นฐาน ใช้ได้ทันทีหลัง `npm ci` — ไม่ต้องมี AI
-> 🧠 อยากได้โหมดฉลาด: ลง [Ollama](https://ollama.com) → `ollama pull gemma3:12b`
-> 📦 อยากแจกคนที่ไม่มี Node: `powershell -File build-portable.ps1` → ได้ zip ดับเบิลคลิกใช้ได้
+<p align="center">
+  <img src="docs/git-vs-klauz.svg" alt="The same edit, two verdicts: git says 1 word changed, Klauz says meaning changed in favor of the Provider" width="100%">
+</p>
+
+A single `shall → may` swap converts a binding duty into an optional one. To `git`, that's "1 word changed." A junior reviewer signs off. You lose. **Klauz catches it deterministically — no AI guessing required.**
 
 ---
 
-## ทำอะไรได้บ้าง (ตารางเดียวจบ — อ่าน 30 วิ)
+## What Klauz actually does
 
-| ฟังก์ชัน | ทำอะไร (สั้นๆ) | เข้าถึง |
+Drop a contract (or two versions) into [**klauz.space**](https://klauz.space) and:
+
+| Tool | What it tells you | Needs AI? |
 |---|---|---|
-| **Compare** | แก้แล้ว "ความหมาย" เปลี่ยนไหม (ไม่ใช่แค่คำ) + เสี่ยงแค่ไหน | เว็บปุ่ม Compare · `meaningdiff a b` |
-| **⚖ Power-Shift** | redline เอียงเข้าข้างใคร กี่ % | ใส่ Parties แล้ว Compare · `--parties "A,B"` |
-| **🔍 Audit** | ตรวจสัญญา **ฉบับเดียว** ทีละข้อ หาข้อเสี่ยง (ไม่ต้องมี 2 ฉบับ) | เว็บปุ่ม Audit |
-| **🔏 Certify (PCR)** | ออก "ใบเสร็จเซ็นลายเซ็น" ที่ **ใครก็ตรวจซ้ำเองได้** ว่าเปลี่ยนอะไร + ไม่มีข้อถูกซ่อน | เว็บปุ่ม Certify · `meaningdiff certify a b` |
-| **🧹 Lint** | เช็คโครงสร้าง: อ้างอิงค้าง · ช่องว่างไม่กรอก · TBD ตกค้าง · นิยามซ้ำ/ไม่ใช้ (กฎล้วน ไม่มั่ว) | เว็บปุ่ม Lint · `meaningdiff lint a` |
-| **🔀 Merge3** | รวม redline 2 ฝ่าย จับ "ข้อที่แก้ชนกัน" เหมือน git merge | `meaningdiff merge3 base left right` |
-| **📜 Covenant** | เขียน rule ครั้งเดียว บังคับทุก edit · ละเมิด = block (exit 2) | `meaningdiff covenant a b --rules x` |
-| **📈 Drift** | หลาย version จับ "ความหมายค่อยๆ พลิก" ที่ไม่มี diff ไหนดูน่ากลัว | `meaningdiff drift v1 v2 v3` |
-| **⚖ Reversibility** | "ถ้าข้อนี้เล็งมาที่คุณ จะเซ็นไหม?" สลับคู่สัญญา หาข้อที่ **ไม่มี mirror = เอียงข้างเดียว** (กฎล้วน) | `meaningdiff reverse a --parties "A,B"` |
-| **🧬 Risk scan** | "Shazam ข้อสัญญา" — จับข้อโหดที่รู้จัก (รับผิดไม่จำกัด, เลิกฝ่ายเดียว ฯลฯ) | `meaningdiff scan a` |
-| **⏳ Blame** | "git blame ระดับความหมาย" — ความเสี่ยงข้อนี้ถูกใส่รอบเจรจาไหน | `meaningdiff blame v1 v2 v3` |
-| **🔒 Intent-Freeze** | ตรึงเจตนาข้อสำคัญด้วยลายเซ็น · แก้จนความหมายเพี้ยน = ลายเซ็นแตก | `meaningdiff freeze a --intent "…"` |
-| **🥊 Adversary** | สร้าง redline ที่ "อีกฝ่าย" จะขอ เพื่อกันล่วงหน้า | `meaningdiff adversary a --parties "A,B" --you "B"` |
+| **🚨 Tripwire** | 16 risky-clause patterns ranked for YOUR role (freelancer / SME / consumer / employee / enterprise) | No |
+| **🔍 Audit** | Clause-by-clause review of a single document | Optional (local LLM) |
+| **🧹 Lint** | Structural defects — dangling refs, leftover TBDs, unfilled blanks, duplicate definitions | No |
+| **Compare** | What meaning actually changed between two versions + ⚖ who it favors | Optional (local LLM) |
+| **🔏 Certify** | A signed receipt anyone can re-verify — proves what changed and that nothing was hidden | No (deterministic core) |
+| **⚖ Reverse** | "If this contract were aimed at you, would you sign it?" — symmetry test | No |
+
+Everything works **without AI** at the deterministic core. Add a local Ollama model for deeper semantic analysis. No API keys, no cloud, ever.
+
+---
+
+## 🚀 Quick start
+
+### Use the hosted demo (zero install)
+
+→ **<https://klauz.space>** — drop a file, click a button, see the result.
+
+### Run on your own machine
 
 ```bash
-# ตัวอย่างที่ใช้บ่อย
-node bin/meaningdiff.js a.txt b.txt --parties "Provider,Client"   # Compare + Power-Shift
-node bin/meaningdiff.js certify a.txt b.txt -o deal.pcr           # ออกใบรับรอง
-node bin/meaningdiff.js verify deal.pcr a.txt b.txt               # ตรวจซ้ำ → VALID / TAMPERED
-node bin/meaningdiff.js lint contract.txt                          # หาจุดบกพร่องโครงสร้าง
-node bin/meaningdiff.js merge3 base.txt partyA.txt partyB.txt      # จับ conflict 2 ฝ่าย
+git clone https://github.com/patsa2561-art/Klauz
+cd Klauz
+npm ci
+
+# Web UI (recommended)
+node bin/meaningdiff.js serve 7700
+# → open http://127.0.0.1:7700
+
+# Or one-shot CLI compare
+node bin/meaningdiff.js examples/contract.before.txt examples/contract.after.txt
 ```
 
-> **🔏 PCR แยก 2 ชั้นชัดเจน — นี่คือความหมายของ "แม่น 100%"**
-> ① **พิสูจน์ได้ (deterministic):** ไม่มีข้อถูกซ่อน + การเปลี่ยนตัวเลข/modal/ปฏิเสธ/ช่องว่าง → ตรวจซ้ำได้เองโดยไม่ต้องใช้ AI
-> ② **โมเดลอ้าง (model-asserted):** การจัดประเภทข้อที่เขียนใหม่ → **ติดป้ายไว้ ไม่ปลอมเป็นของพิสูจน์**
+**Smart mode (optional, for nuanced semantic analysis):**
+
+```bash
+# Install Ollama once: https://ollama.com
+ollama pull gemma3:12b
+# Klauz auto-detects it. No config, no API key, no internet needed.
+```
 
 ---
 
-## อ่านผลให้เป็น + สิ่งที่ควรรู้  ·  Reading the results + things to know
+## 🧠 How it works
 
-**🧹 ผล Lint / Lint results**
-- **✗ = ควรแก้ (to fix)** · **⚠ = ควรเช็คดู (worth a look)**
-- **ฟอร์มเปล่าที่มีช่องว่าง (……) เป็นเรื่องปกติ ไม่ใช่ error** — ระบบจะรวมเป็นคำเตือนเดียวว่า "ยังไม่กรอก X จุด" / *A blank template is normal, not an error — blanks are grouped into one "not filled yet" note.*
-- Lint ใช้กฎล้วน ไม่มี AI → **ไม่มีทางมั่ว** / *pure rules, no AI — it never makes things up.*
+Klauz uses **selective prediction** — it commits to a verdict only when it can prove it, and abstains otherwise. Three layers:
 
-**🤖 เรื่อง AI / About AI**
-- **Certify · Lint · Merge3 · Compare พื้นฐาน = ไม่ต้องมี AI และไม่ต้องต่อเน็ต** / *work with no AI and no internet.*
-- โหมดฉลาด (อ่านข้อที่เขียนใหม่ลึกขึ้น) ใช้โมเดลเล็กในเครื่องผ่าน Ollama — **ออปชัน ไม่บังคับ ไม่ต้องใช้ LLM เทพ** / *optional small local model via Ollama; no powerful LLM needed.*
-  - เปิดโหมดฉลาด: ลง [Ollama](https://ollama.com) → `ollama pull gemma3:12b`
-- 🔒 **เอกสารไม่เคยออกจากเครื่องคุณ** / *your documents never leave your machine.*
+```
+  ┌─────────────────────────────────────────────────────────────┐
+  │  TIER 1 · PROOF   (deterministic rules, 100% precision)     │
+  │  • modal shifts (shall → may)                               │
+  │  • negation flips (covers → does not cover)                 │
+  │  • number changes (30 → 60 days)                            │
+  │  • micro-logic prover (double-negatives, synonyms, idioms)  │
+  └─────────────────────────────────────────────────────────────┘
+                              ↓ if abstained
+  ┌─────────────────────────────────────────────────────────────┐
+  │  TIER 2 · CONSENSUS   (adversarial dual-LLM, local)         │
+  │  prosecutor LLM + defender LLM. Agree → commit. Split → ↓   │
+  └─────────────────────────────────────────────────────────────┘
+                              ↓ if still uncertain
+  ┌─────────────────────────────────────────────────────────────┐
+  │  TIER 3 · ABSTAIN   (defer to human review)                 │
+  │  Never silently wrong. Better honest than confidently bad.  │
+  └─────────────────────────────────────────────────────────────┘
+```
 
----
+**Measured** on a 42-pair test corpus (English) + 15-pair Thai corpus:
 
-## รองรับไฟล์อะไร
+- Proof tier alone: **40.5% coverage @ 100% precision, 0 errors**
+- Proof + consensus: **83% coverage @ 100% precision, 0 silent errors**
 
-`.txt` `.md` · **`.docx`** · **`.pdf`** · **`.xlsx/.csv`** · **รูป/สแกน** (`.png .jpg` → gemma3 vision อ่านให้)
-
-ใส่ไฟล์ format ไหนก็ได้ — ระบบ extract เป็นข้อความให้เอง
-
----
-
-## แม่นแค่ไหน (วัดจริง ไม่โม้)
-
-| | ผล |
-|---|---|
-| จับ meaning-change (F1) | **94.7%** · recall **100%** (ไม่พลาดสักอัน) |
-| Power-Shift ทิศทาง | **91.7%** |
-| อ่าน .docx / .xlsx | round-trip **100%** |
-| vision อ่านรูป (clean) | **10/10 clauses, 5/5 table cells** |
-
-> ข้อจำกัดจริง: gemma3:12b เล็ก — สแกนกระดาษจริง/ลายมือ/เอกสารเอียงจะแม่นน้อยลง · โหมด `consensus` (rule+LLM เห็นต่าง = flag ให้คนดู) ลด silent error
+Honest framing: 100% accuracy on every input is impossible for fuzzy semantic tasks. What Klauz guarantees is **100% precision on what it commits to** + a measured coverage number. The cases the system abstains on go to a human — never guessed.
 
 ---
 
-## ต่างกับ ChatGPT ยังไง
+## 🔒 Privacy
 
-ChatGPT อ่านสัญญาแล้วบอกว่าเอียงได้ (เก่งกว่าด้วย) — แต่ meaningdiff คือ **infrastructure ไม่ใช่ chat**: ① local ไม่รั่ว ② **block อัตโนมัติ (exit 2)** ③ **policy-as-code** (เขียน rule บังคับใช้ทุก edit) ④ reproducible ⑤ scale + audit ได้
+- **🔒 In-memory only** — documents are processed and immediately discarded
+- **🚫 Zero document storage** — we never store, log, or read your document content
+- **👁 You alone see content** — nobody else, ever
+- **🌐 HTTPS end-to-end** — Let's Encrypt cert on klauz.space
 
-**เทียบ:** ChatGPT = "ถามผู้เชี่ยวชาญ 1 ครั้ง" · meaningdiff = "smoke detector ติดผนัง — ทำงานทุกครั้ง ไม่ลืม block ได้"
+For the strongest guarantee, run Klauz on your own machine. Documents never leave it.
 
 ---
 
-## License
-MIT · เอกสารไม่เคยออกจากเครื่องคุณ
+## ✨ Features in depth
+
+- **Bilingual detectors** — English + Thai out of the box (modal / negation / number patterns in both)
+- **Proof-Carrying Redline (PCR)** — every signed certificate records the exact deterministic reasoning so anyone can re-verify with no model needed
+- **Power-Shift meter** — when both parties are named, Klauz tells you which side a redline favors and by how much (e.g. _"this redline favors the Provider 80%"_)
+- **Persona-aware risk (Tripwire)** — `auto-renew` is high-risk for an SME but low for an enterprise. Same clause, context-aware verdict.
+- **Drop-in formats** — `.txt`, `.md`, `.docx`, `.pdf`, `.xlsx`, `.csv`, `.png` / `.jpg` (OCR via the local model if installed)
+- **Cross-platform** — `npm run fullloop` works on Windows / Mac / Linux
+
+---
+
+## 🛠 Tech stack
+
+- Pure Node.js (no framework dependencies for the core)
+- Cryptography via `node:crypto` (ed25519 signatures, SHA-256 hashing)
+- Optional local LLM via [Ollama](https://ollama.com) — no API keys, no cloud
+- Web UI: vanilla HTML / CSS / JS (no build step, ~50 KB)
+
+> **Naming note.** The product brand is **Klauz**. The CLI binary, file paths, and internal API still use `meaningdiff` as the code name — same relationship as Claude / Anthropic.
+
+---
+
+## 📜 License
+
+MIT. Take it, learn from it, fork it.
+
+---
+
+<p align="center">
+  Built by <a href="https://github.com/patsa2561-art">@patsa2561-art</a> · Live at <a href="https://klauz.space"><b>klauz.space</b></a>
+</p>

@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 560" preserveAspectRatio="xMidYMid meet" role="img" aria-label="The same edit, two verdicts: git vs Klauz">
+  <rect width="1280" height="560" fill="#faf8f5"/>
+
+  <!-- header -->
+  <text x="640" y="52" text-anchor="middle" font-family="Georgia,serif" font-size="32" font-weight="600" fill="#1c1815" letter-spacing="-0.6">The same edit, two verdicts.</text>
+  <text x="640" y="86" text-anchor="middle" font-family="-apple-system,Inter,sans-serif" font-size="14" fill="#5f574e">
+    Old: "The Provider <tspan font-weight="700" fill="#1c1815">shall</tspan> encrypt customer data."
+    &#160;&#160;→&#160;&#160;
+    New: "The Provider <tspan font-weight="700" fill="#1c1815">may</tspan> encrypt customer data."
+  </text>
+
+  <!-- LEFT CARD: git -->
+  <g transform="translate(80, 130)">
+    <rect width="540" height="380" rx="16" fill="#fff" stroke="#ebe5dc"/>
+
+    <text x="30" y="42" font-family="ui-monospace,'JetBrains Mono',monospace" font-size="16" fill="#5f574e">$ git diff contract.txt</text>
+    <line x1="30" y1="56" x2="510" y2="56" stroke="#ebe5dc"/>
+
+    <!-- diff lines -->
+    <rect x="30" y="76" width="480" height="36" rx="4" fill="#fbeee8"/>
+    <text x="42" y="100" font-family="ui-monospace,monospace" font-size="13" fill="#a8351b">- The Provider <tspan font-weight="700">shall</tspan> encrypt customer data.</text>
+
+    <rect x="30" y="120" width="480" height="36" rx="4" fill="#ecf6ee"/>
+    <text x="42" y="144" font-family="ui-monospace,monospace" font-size="13" fill="#2f7d4c">+ The Provider <tspan font-weight="700">may</tspan> encrypt customer data.</text>
+
+    <!-- verdict label -->
+    <text x="30" y="210" font-family="-apple-system,Inter,sans-serif" font-size="11" font-weight="700" fill="#a39a8d" letter-spacing="2">GIT'S VERDICT</text>
+
+    <!-- big verdict -->
+    <text x="30" y="262" font-family="Georgia,serif" font-size="38" font-weight="600" fill="#1c1815" letter-spacing="-0.8">1 word changed.</text>
+
+    <text x="30" y="298" font-family="-apple-system,Inter,sans-serif" font-size="14" fill="#5f574e">↳ junior reviewer signs off. nothing flagged.</text>
+
+    <!-- footer note -->
+    <line x1="30" y1="328" x2="510" y2="328" stroke="#ebe5dc"/>
+    <text x="30" y="356" font-family="-apple-system,Inter,sans-serif" font-size="12" fill="#a39a8d">⚠&#160;&#160;git tracks <tspan font-weight="700" fill="#5f574e">characters</tspan>, not meaning.</text>
+  </g>
+
+  <!-- arrow between cards -->
+  <g transform="translate(640, 320)">
+    <circle r="22" fill="#fff" stroke="#b8451f" stroke-width="2"/>
+    <text y="6" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" font-weight="700" fill="#b8451f">→</text>
+  </g>
+
+  <!-- RIGHT CARD: klauz -->
+  <g transform="translate(660, 130)">
+    <rect width="540" height="380" rx="16" fill="#fff" stroke="#b8451f" stroke-width="2"/>
+
+    <!-- header -->
+    <g transform="translate(30, 30)">
+      <rect width="28" height="28" rx="7" fill="#b8451f"/>
+      <text x="14" y="20" text-anchor="middle" font-size="16" fill="#fff">⚖</text>
+    </g>
+    <text x="68" y="50" font-family="Georgia,serif" font-size="20" font-weight="600" fill="#1c1815">Klauz</text>
+    <line x1="30" y1="76" x2="510" y2="76" stroke="#ebe5dc"/>
+
+    <!-- proven badge -->
+    <rect x="30" y="96" width="190" height="28" rx="6" fill="#2f7d4c"/>
+    <text x="125" y="115" text-anchor="middle" font-family="-apple-system,Inter,sans-serif" font-size="11.5" font-weight="700" fill="#fff" letter-spacing="1.5">PROVEN · MODAL SHIFT</text>
+
+    <!-- analysis -->
+    <text x="30" y="155" font-family="-apple-system,Inter,sans-serif" font-size="13" fill="#5f574e">obligation strength:</text>
+    <g transform="translate(30, 175)" font-family="ui-monospace,monospace" font-size="15" font-weight="700">
+      <rect width="120" height="32" rx="6" fill="#ecf6ee"/>
+      <text x="60" y="22" text-anchor="middle" fill="#2f7d4c">MANDATORY</text>
+
+      <text x="135" y="22" font-family="Inter,sans-serif" font-weight="400" fill="#5f574e">→</text>
+
+      <rect x="155" width="120" height="32" rx="6" fill="#fbeee8"/>
+      <text x="215" y="22" text-anchor="middle" fill="#a8351b">PERMISSIVE</text>
+    </g>
+
+    <!-- verdict label -->
+    <text x="30" y="248" font-family="-apple-system,Inter,sans-serif" font-size="11" font-weight="700" fill="#a39a8d" letter-spacing="2">KLAUZ'S VERDICT</text>
+
+    <!-- big verdict -->
+    <text x="30" y="297" font-family="Georgia,serif" font-size="38" font-weight="600" fill="#a8351b" letter-spacing="-0.8">Meaning changed.</text>
+
+    <!-- favors -->
+    <text x="30" y="328" font-family="-apple-system,Inter,sans-serif" font-size="14" fill="#5f574e">↳ ⚖&#160;&#160;favors <tspan font-weight="700" fill="#1c1815">Provider</tspan> (their duty became optional)</text>
+
+    <!-- footer note -->
+    <line x1="30" y1="346" x2="510" y2="346" stroke="#ebe5dc"/>
+    <text x="30" y="368" font-family="-apple-system,Inter,sans-serif" font-size="12" fill="#a39a8d">✓&#160;&#160;tracks <tspan font-weight="700" fill="#b8451f">meaning</tspan> via proof + LLM consensus.</text>
+  </g>
+</svg>
