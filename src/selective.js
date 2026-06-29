@@ -12,6 +12,7 @@
 // and idioms ("without limitation") are handled correctly without special-casing.
 import { modalClass, negCount, numbers, MODALS } from './heuristic.js';
 import { classify as pcrClassify } from './pcr.js';
+import { logicallyEqual } from './micrologic.js';
 
 // Within-class modal synonym (will↔shall both mandatory, may↔can both permissive):
 // the only difference is a same-class modal word, so obligation strength — and thus
@@ -56,6 +57,13 @@ export function proofVerdict(oldText, newText, parties = []) {
       return proven(true, 'definition', 'A blank/template field was filled in.', { rule: 'blank-filled' });
     default: {
       // TEXT_CHANGED — the core could not pin it to one provable dimension.
+      // Try MICRO-LOGIC equivalence first: collapses double-negatives, scope
+      // idioms ("without limitation"), filler, modal-class synonyms, and verb/
+      // adverb clusters. If canonical forms match, the two clauses are
+      // semantically equivalent (proven, same precision class as the proof tier).
+      if (logicallyEqual(oldText, newText)) {
+        return proven(false, 'synonym', 'Logically equivalent — canonical forms match after collapsing double-negatives, scope idioms, filler, and within-class synonyms.', { rule: 'micro-logic' });
+      }
       const syn = withinClassModalSynonym(oldText, newText);
       if (syn) return proven(false, 'synonym', `Within-class modal synonym (${syn}) — obligation strength unchanged.`, { rule: 'modal-synonym', modalClass: syn });
       if (parties.length === 2) {

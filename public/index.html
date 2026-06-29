@@ -727,7 +727,7 @@ const I18N = {
     foot_p_priv: 'Documents are processed in memory and discarded immediately. We never store, log, or read file content — only you ever see what you compare.',
     foot_h_open: 'Open source',
     foot_p_open: 'MIT licensed. Deterministic detectors + optional local LLM (Ollama). No cloud AI, no API keys.',
-    tripwire_btn: '🚨 Tripwire (free)',
+    tripwire_btn: '🚨 Tripwire',
     persona_label: 'You are',
     persona_tip: '<b>Who are you in this contract?</b><br><br>The same clause is risky differently for different readers — Klauz re-ranks the risks based on who you are.<br><br><b>Freelancer</b>: solo contractor / consultant<br><b>SME</b>: small business owner<br><b>Consumer</b>: signing ToS or a personal contract<br><b>Employee</b>: signing an employment agreement<br><b>Enterprise</b>: large company with a legal team',
     persona_freelancer: 'Freelancer',
@@ -742,6 +742,7 @@ const I18N = {
     tripwire_clean_note: 'No risky-clause patterns matched. This is a fast, rules-based scan — for deeper meaning analysis use Compare / Audit / Certify.',
     tripwire_why_pa: 'Same clause, different verdict per persona. Highlights below are weighted for your selected role — and we show the SAME clause re-ranked for every other persona under each card.',
     cross_persona: 'risk by persona:',
+    tripwire_checked: 'patterns we scanned for',
     priv: '🔒 HTTPS · in-memory only · zero document storage',
     trust_title: 'Private by design — only you see your documents',
     trust_intro: 'Klauz processes your documents in memory only and discards them immediately. We do not store, log, or read the content of any file you upload. Nobody but you ever sees what you compare.',
@@ -771,7 +772,7 @@ const I18N = {
     audit_btn: '🔍 Audit one doc',
     diff_btn: 'Compare 2 versions',
     demo_btn: '▶ Try example',
-    mode_hint: 'Have <b>one</b> document? → put it on the left, click <b style="color:var(--ok)">🔍 Audit one doc</b> &nbsp;|&nbsp; Have <b>2 versions</b> (before–after)? → fill both, click <b style="color:var(--accent)">Compare 2 versions</b>',
+    mode_hint: 'Have <b>one</b> document? → put it on the left, click <b style="color:var(--danger)">🚨 Tripwire</b> (pick <b>You are</b> first) or <b style="color:var(--ok)">🔍 Audit one doc</b> &nbsp;|&nbsp; Have <b>2 versions</b> (before–after)? → fill both, click <b style="color:var(--accent)">Compare 2 versions</b>',
     ph_before: 'Paste the original text, or drop a file (.pdf .docx .xlsx .png …)',
     ph_after: 'Paste the revised text, or drop a file',
     demo_ready: 'Example loaded — click "Compare 2 versions"',
@@ -834,7 +835,7 @@ const I18N = {
     foot_p_priv: 'เอกสารประมวลผลในหน่วยความจำแล้วทิ้งทันที — เราไม่เก็บ ไม่บันทึก ไม่อ่านเนื้อหา มีแค่คุณเท่านั้นที่เห็นสิ่งที่คุณเปรียบเทียบ',
     foot_h_open: 'โอเพนซอร์ส',
     foot_p_open: 'MIT licensed · ใช้กฎ deterministic + LLM ในเครื่อง (Ollama) เป็นออปชัน ไม่ใช้ cloud AI ไม่ต้องมี API key',
-    tripwire_btn: '🚨 ตรวจ Tripwire (ฟรี)',
+    tripwire_btn: '🚨 ตรวจ Tripwire',
     persona_label: 'คุณคือ',
     persona_tip: '<b>คุณอยู่ในฐานะไหนของสัญญา?</b><br><br>ข้อสัญญาเดียวกันเสี่ยงต่างกันสำหรับแต่ละคน — Klauz จัดอันดับความเสี่ยงให้คุณตามตัวเลือกนี้<br><br><b>ฟรีแลนซ์</b>: รับงานเดี่ยว / ที่ปรึกษา<br><b>ธุรกิจรายเล็ก</b>: เจ้าของกิจการ SME<br><b>ผู้บริโภค</b>: เซ็น ToS หรือสัญญาส่วนตัว<br><b>พนักงาน</b>: เซ็นสัญญาจ้างงาน<br><b>องค์กรใหญ่</b>: บริษัทใหญ่มีฝ่ายกฎหมาย',
     persona_freelancer: 'ฟรีแลนซ์',
@@ -849,6 +850,7 @@ const I18N = {
     tripwire_clean_note: 'ไม่พบรูปแบบข้อสัญญาเสี่ยงที่ตรงกัน — นี่คือสแกนแบบกฎที่เร็ว ถ้าต้องการวิเคราะห์ความหมายลึกใช้ Compare / Audit / Certify',
     tripwire_why_pa: 'ข้อสัญญาเดียวกัน ตัดสินต่างกันสำหรับแต่ละคน — ผลที่ไฮไลต์ด้านล่างถ่วงน้ำหนักตามฐานะที่คุณเลือก และแสดงให้เห็นด้วยว่าข้อเดียวกันเสี่ยงแค่ไหนสำหรับฝ่ายอื่น (ใต้การ์ดแต่ละใบ)',
     cross_persona: 'เสี่ยงตามฐานะ:',
+    tripwire_checked: 'รูปแบบที่ Klauz ตรวจหา',
     priv: '🔒 HTTPS · ในหน่วยความจำเท่านั้น · ไม่เก็บเอกสาร',
     trust_title: 'ออกแบบให้เป็นส่วนตัว — มีแค่คุณเท่านั้นที่เห็นเอกสาร',
     trust_intro: 'Klauz ประมวลผลเอกสารคุณในหน่วยความจำเท่านั้น แล้วทิ้งทันที — เราไม่เก็บ ไม่บันทึก ไม่อ่านเนื้อหาไฟล์ที่คุณอัปโหลด ไม่มีใครเห็นสิ่งที่คุณเปรียบเทียบนอกจากตัวคุณเอง',
@@ -878,7 +880,7 @@ const I18N = {
     audit_btn: '🔍 ตรวจฉบับเดียว',
     diff_btn: 'เทียบ 2 ฉบับ',
     demo_btn: '▶ ลองตัวอย่าง',
-    mode_hint: 'มีสัญญา <b>ฉบับเดียว</b>? → ใส่ช่องซ้าย กด <b style="color:var(--ok)">🔍 ตรวจฉบับเดียว</b> &nbsp;|&nbsp; มี <b>2 ฉบับ</b> (ก่อน–หลังแก้)? → ใส่ทั้งสองช่อง กด <b style="color:var(--accent)">เทียบ 2 ฉบับ</b>',
+    mode_hint: 'มีสัญญา <b>ฉบับเดียว</b>? → ใส่ช่องซ้าย กด <b style="color:var(--danger)">🚨 Tripwire</b> (เลือก <b>คุณคือ</b> ก่อน) หรือ <b style="color:var(--ok)">🔍 ตรวจฉบับเดียว</b> &nbsp;|&nbsp; มี <b>2 ฉบับ</b> (ก่อน–หลัง)? → ใส่ทั้งสองช่อง กด <b style="color:var(--accent)">เทียบ 2 ฉบับ</b>',
     ph_before: 'วางข้อความต้นฉบับ หรือลากไฟล์ (.pdf .docx .xlsx .png …)',
     ph_after: 'วางข้อความที่แก้แล้ว หรือลากไฟล์',
     demo_ready: 'โหลดตัวอย่างแล้ว — กด "เทียบ 2 ฉบับ" ได้เลย',
@@ -1046,9 +1048,20 @@ function renderTripwire(rep, persona) {
   const s = rep.summary, out = document.getElementById('out');
   const pLabel = t('persona_' + persona);
   if (s.total === 0) {
-    out.innerHTML =
-      '<div class="verdict v-ok">✅ ' + esc(t('tripwire_no_risk')) + ' <b>' + esc(pLabel) + '</b></div>' +
-      '<div class="muted" style="margin:10px 0">' + esc(t('tripwire_clean_note')) + '</div>';
+    const checked = ['Auto-renewal', 'Unilateral termination', 'Mandatory arbitration',
+      'Class-action waiver', 'Non-compete', 'Unlimited liability', 'Broad IP assignment',
+      'One-way indemnification', 'Unilateral amendment', 'Their data ownership',
+      'Foreign jurisdiction', 'Liquidated damages', 'Exclusivity', 'Audit rights',
+      'Late fees', 'One-way confidentiality'];
+    let h = '<div class="verdict v-ok" style="font-size:22px">✅ ' + esc(t('tripwire_no_risk')) + ' <b>' + esc(pLabel) + '</b></div>';
+    h += '<div class="muted" style="margin:14px 0 18px;font-size:14px">' + t('tripwire_clean_note') + '</div>';
+    h += '<div class="infobox">';
+    h += '<div style="font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:12px">' + esc(t('tripwire_checked')) + '</div>';
+    h += '<div style="display:flex;flex-wrap:wrap;gap:6px">';
+    for (const c of checked) h += '<span class="trust-pill" style="font-size:11.5px;padding:4px 10px">' + esc(c) + '</span>';
+    h += '</div></div>';
+    out.innerHTML = h;
+    out.scrollIntoView({ behavior: 'smooth', block: 'start' });
     return;
   }
   const vc = s.high ? 'v-high' : s.medium ? 'v-mid' : 'v-ok';
@@ -1073,6 +1086,7 @@ function renderTripwire(rep, persona) {
     html += '</div></div></div>';
   }
   out.innerHTML = html;
+  out.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 let LAST_CERT = null;
 async function runCertify() {
