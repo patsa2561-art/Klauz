@@ -13,6 +13,8 @@
 <p align="center">
   <a href="https://klauz.space"><b>🌐 Live demo → klauz.space</b></a>
   &nbsp;·&nbsp;
+  <a href="https://klauz.space/journey"><b>📓 Journey + Chain</b></a>
+  &nbsp;·&nbsp;
   <a href="#-quick-start">Run locally</a>
   &nbsp;·&nbsp;
   <a href="#-how-it-works">How it works</a>
@@ -40,14 +42,38 @@ Drop a contract (or two versions) into [**klauz.space**](https://klauz.space) an
 
 | Tool | What it tells you | Needs AI? |
 |---|---|---|
-| **🚨 Tripwire** | 16 risky-clause patterns ranked for YOUR role (freelancer / SME / consumer / employee / enterprise) | No |
+| **🚨 Tripwire** | 43 risky-clause patterns (EN + TH, with PDPA / Consumer Protection Act citations) ranked for YOUR role (freelancer / SME / consumer / employee / enterprise) | No |
+| **🪪 Templates** | Recognizes known templates (Spotify, Lazada, Shopee, AWS, Stripe) and surfaces their known issues automatically | No |
 | **🔍 Audit** | Clause-by-clause review of a single document | Optional (local LLM) |
 | **🧹 Lint** | Structural defects — dangling refs, leftover TBDs, unfilled blanks, duplicate definitions | No |
 | **Compare** | What meaning actually changed between two versions + ⚖ who it favors | Optional (local LLM) |
 | **🔏 Certify** | A signed receipt anyone can re-verify — proves what changed and that nothing was hidden | No (deterministic core) |
 | **⚖ Reverse** | "If this contract were aimed at you, would you sign it?" — symmetry test | No |
+| **📓 [Journey + Chain](https://klauz.space/journey)** | Tamper-proof history of every contract you've reviewed — proves "I saw this on date X, no retroactive edits" | No |
 
 Everything works **without AI** at the deterministic core. Add a local Ollama model for deeper semantic analysis. No API keys, no cloud, ever.
+
+---
+
+## 📓 Journey + Klauz Chain — *world-first*
+
+**[https://klauz.space/journey](https://klauz.space/journey)**
+
+**In 10 seconds:** every contract you review with Klauz is logged here, cryptographically chained, and kept only in your browser. Later you can prove — to a court, a counterparty, your future self — exactly *what* you reviewed, *when*, *with which version of the rules*, and that nothing was added or changed retroactively.
+
+How it works:
+
+- Every saved review becomes a chain entry: `link = SHA-256(prev_link || timestamp || engine_hash || kind || input_hash || output_hash)`
+- Any retroactive edit to a past entry breaks the chain at that exact index — detectable in O(N) by anyone with a SHA-256 implementation
+- Verify three ways:
+  1. **In your browser** — click "✓ Verify my chain" on the [/journey](https://klauz.space/journey) page
+  2. **Via the server** — `POST /chain/verify` with your exported chain JSON (lawyers / auditors / counterparties can verify without trusting your browser)
+  3. **Read the code** — `src/chain.js` is ~110 lines of pure SHA-256, no dependencies
+- The chain lives in `localStorage['klauz_chain_v1']` — never sent to the server unless you explicitly POST it
+
+Why this is new: existing legal-tech tools (Harvey, Casetext, Spellbook, Ironclad, DocuSign) either keep reviews on their own servers (you must trust the vendor) or sign documents but not the *review verdict itself*. Klauz Chain signs the verdict — client-side, vendor-independent, tamper-evident.
+
+**External anchor (recommended):** copy your latest chain link and paste it somewhere outside your browser (email to yourself, a private gist, a tweet). Any future rewrite of the chain tail then becomes detectable against the anchor.
 
 ---
 

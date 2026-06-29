@@ -134,11 +134,38 @@
   <a href="/">← back to Klauz</a>
 </header>
 <main class="shell">
-  <h1>Your Klauz Journey</h1>
-  <p class="sub">A personal log of every contract you've reviewed — patterns, parties, drift over time. Cross-reference clauses across your history to spot what counterparts keep slipping in.</p>
+  <h1>Your Contract Review Notebook</h1>
+  <p class="sub" style="font-size:16px;color:var(--text);max-width:680px">
+    <b>What this is, in 10 seconds:</b> every contract you review with Klauz is saved here,
+    chain-signed with SHA-256, and kept inside your browser. You can prove later
+    <i>"I reviewed this contract on date X and saw problems Y"</i> — and no one can fake or alter it.
+  </p>
 
-  <div class="privacy-note">
-    🔒 <b>100% private.</b> This page reads from your browser's localStorage only — nothing ever leaves your device. Klauz the server cannot see your journey. Clearing browser data wipes it.
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0 22px 0">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+      <div style="font-size:22px;margin-bottom:4px">🕒</div>
+      <div style="font:600 13.5px var(--sans);margin-bottom:3px">When did I see this clause?</div>
+      <div style="color:var(--text-2);font-size:12.5px;line-height:1.5">Every review is timestamped. Browse back through any contract you've touched.</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+      <div style="font-size:22px;margin-bottom:4px">🔐</div>
+      <div style="font:600 13.5px var(--sans);margin-bottom:3px">Can someone fake it?</div>
+      <div style="color:var(--text-2);font-size:12.5px;line-height:1.5">No. Every entry is linked to the previous one with SHA-256. Any tampering breaks the chain — visibly.</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+      <div style="font-size:22px;margin-bottom:4px">🏠</div>
+      <div style="font:600 13.5px var(--sans);margin-bottom:3px">Where's my data?</div>
+      <div style="color:var(--text-2);font-size:12.5px;line-height:1.5">Only in your browser's localStorage. Klauz the server cannot see it. Clearing browser data wipes it.</div>
+    </div>
+  </div>
+
+  <div style="background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:24px;display:flex;gap:12px;align-items:flex-start">
+    <span style="font-size:20px;line-height:1">💡</span>
+    <div style="font-size:13.5px;line-height:1.55">
+      <b>How to start:</b> go to <a href="/" style="color:var(--accent);font-weight:600">the main Klauz page</a>,
+      paste a contract, click <b>Tripwire</b>, then click <b>Save to Journey</b>. Your first chain entry appears below.
+      In court or negotiation, export the chain (one button) and anyone can verify it without trusting Klauz.
+    </div>
   </div>
 
   <div class="stats" id="stats"></div>
