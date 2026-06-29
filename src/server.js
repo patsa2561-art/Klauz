@@ -137,6 +137,13 @@ export function serve(port = 7700, opts = {}) {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify(lint(body.text || '')));
       }
+      if (req.method === 'POST' && req.url === '/tripwire') {
+        // Context-aware legal tripwire — pure rules, persona-weighted risk.
+        const body = JSON.parse(await readBody(req));
+        const { scanTripwire } = await import('./tripwire.js');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify(scanTripwire(body.text || '', body.persona || 'sme')));
+      }
       res.writeHead(404); res.end('not found');
     } catch (e) {
       res.writeHead(500, { 'Content-Type': 'application/json' });

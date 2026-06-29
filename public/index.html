@@ -430,6 +430,102 @@
     white-space: nowrap;
   }
 
+  /* --- TRIPWIRE (context-aware risk scanner) --- */
+  .tripwire-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--border-strong);
+    border-radius: var(--r-md);
+    padding: 18px 22px;
+    box-shadow: var(--shadow-sm);
+    margin: 12px 0;
+  }
+  .tripwire-card.risk-high { border-left-color: var(--danger); }
+  .tripwire-card.risk-medium { border-left-color: var(--warn); }
+  .tripwire-card.risk-low { border-left-color: var(--text-3); }
+  .tripwire-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .tripwire-label { font: 600 16px var(--serif); letter-spacing: -.01em; }
+  .risk-badge {
+    font: 700 10.5px var(--sans);
+    padding: 4px 10px; border-radius: 4px;
+    letter-spacing: .08em;
+    color: white;
+  }
+  .risk-badge.risk-high { background: var(--danger); }
+  .risk-badge.risk-medium { background: var(--warn); }
+  .risk-badge.risk-low { background: var(--text-3); }
+  .tripwire-snippet {
+    margin: 0 0 12px;
+    padding: 10px 14px;
+    background: var(--surface-2);
+    border-left: 3px solid var(--border-strong);
+    font: 12.5px/1.55 var(--mono);
+    color: var(--text-2);
+    border-radius: 0 6px 6px 0;
+    word-break: break-word;
+  }
+  .tripwire-why {
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  .tripwire-personas-row {
+    display: flex; align-items: center; gap: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+    flex-wrap: wrap;
+  }
+  .tripwire-personas-lbl {
+    font-size: 10.5px; color: var(--text-3);
+    text-transform: uppercase; letter-spacing: .08em; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .tripwire-personas { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tw-pers {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-pill);
+    padding: 3px 4px 3px 10px;
+    font-size: 11px;
+  }
+  .tw-pers.tw-pers-active {
+    background: var(--accent-soft);
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+  .tw-pers-name { color: var(--text-2); font-weight: 500; }
+  .tw-pers.tw-pers-active .tw-pers-name { color: var(--accent); font-weight: 600; }
+  .risk-pip {
+    font: 700 9.5px var(--sans);
+    padding: 2px 6px; border-radius: 3px;
+    color: white;
+    letter-spacing: .03em;
+  }
+  .risk-pip.risk-high { background: var(--danger); }
+  .risk-pip.risk-medium { background: var(--warn); }
+  .risk-pip.risk-low { background: var(--text-3); }
+  /* dropdown for persona */
+  select {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-sm);
+    padding: 9px 32px 9px 14px;
+    font: 14px var(--sans);
+    outline: none; cursor: pointer;
+    transition: border-color .12s, box-shadow .12s;
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--text-3) 50%), linear-gradient(135deg, var(--text-3) 50%, transparent 50%);
+    background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+  }
+  select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring); }
+  .btn-danger { background: var(--danger); color: white; }
+  .btn-danger:hover { background: color-mix(in srgb, var(--danger) 88%, black); }
+
   /* tier badges (inline pill — PROVEN/CONSENSUS/ABSTAIN) */
   .tier-chip {
     display: inline-block;
@@ -547,7 +643,19 @@
       <span class="info" tabindex="0">ⓘ<span class="tip" data-i18n="parties_tip"></span></span>
     </span>
     <input type="text" id="parties" placeholder="Provider, Client" value="Provider, Client" />
+    <span class="ctrl-label" style="margin-left:8px">
+      <span data-i18n="persona_label">You are</span>
+      <span class="info" tabindex="0">ⓘ<span class="tip" data-i18n="persona_tip"></span></span>
+    </span>
+    <select id="persona">
+      <option value="freelancer" data-i18n="persona_freelancer"></option>
+      <option value="sme" selected data-i18n="persona_sme"></option>
+      <option value="consumer" data-i18n="persona_consumer"></option>
+      <option value="employee" data-i18n="persona_employee"></option>
+      <option value="enterprise" data-i18n="persona_enterprise"></option>
+    </select>
     <div class="ctrl-actions">
+      <button id="tripwire" class="btn-danger" onclick="runTripwire()" data-i18n="tripwire_btn"></button>
       <button id="audit" class="btn-ok" onclick="runAudit()" data-i18n="audit_btn"></button>
       <button id="lint" class="btn-info" onclick="runLint()" data-i18n="lint_btn"></button>
       <button id="certify" class="btn-purple" onclick="runCertify()" data-i18n="certify_btn"></button>
@@ -564,6 +672,7 @@
   <section class="infobox" id="legend" style="margin-top:48px">
     <div style="font-size:13px;color:var(--text-2);margin-bottom:14px" data-i18n="legend_title"></div>
     <div style="display:grid;gap:10px;font-size:13.5px;line-height:1.55">
+      <div><span style="color:var(--danger)">●</span> <b>🚨 Tripwire</b> — <span data-i18n="leg_tripwire"></span></div>
       <div><span style="color:var(--ok)">●</span> <b>🔍 Audit</b> — <span data-i18n="leg_audit"></span></div>
       <div><span style="color:var(--info)">●</span> <b>🧹 Lint</b> — <span data-i18n="leg_lint"></span></div>
       <div><span style="color:var(--accent)">●</span> <b>Compare</b> — <span data-i18n="leg_compare"></span></div>
@@ -618,6 +727,21 @@ const I18N = {
     foot_p_priv: 'Documents are processed in memory and discarded immediately. We never store, log, or read file content — only you ever see what you compare.',
     foot_h_open: 'Open source',
     foot_p_open: 'MIT licensed. Deterministic detectors + optional local LLM (Ollama). No cloud AI, no API keys.',
+    tripwire_btn: '🚨 Tripwire (free)',
+    persona_label: 'You are',
+    persona_tip: '<b>Who are you in this contract?</b><br><br>The same clause is risky differently for different readers — Klauz re-ranks the risks based on who you are.<br><br><b>Freelancer</b>: solo contractor / consultant<br><b>SME</b>: small business owner<br><b>Consumer</b>: signing ToS or a personal contract<br><b>Employee</b>: signing an employment agreement<br><b>Enterprise</b>: large company with a legal team',
+    persona_freelancer: 'Freelancer',
+    persona_sme: 'SME / small biz',
+    persona_consumer: 'Consumer',
+    persona_employee: 'Employee',
+    persona_enterprise: 'Enterprise',
+    scanning_tripwire: '⏳ Scanning for context-aware tripwires…',
+    tripwire_done: '✓ Tripwire scan complete',
+    tripwire_found: 'tripwire(s) ranked for',
+    tripwire_no_risk: 'No common tripwires matched for',
+    tripwire_clean_note: 'No risky-clause patterns matched. This is a fast, rules-based scan — for deeper meaning analysis use Compare / Audit / Certify.',
+    tripwire_why_pa: 'Same clause, different verdict per persona. Highlights below are weighted for your selected role — and we show the SAME clause re-ranked for every other persona under each card.',
+    cross_persona: 'risk by persona:',
     priv: '🔒 HTTPS · in-memory only · zero document storage',
     trust_title: 'Private by design — only you see your documents',
     trust_intro: 'Klauz processes your documents in memory only and discards them immediately. We do not store, log, or read the content of any file you upload. Nobody but you ever sees what you compare.',
@@ -627,6 +751,7 @@ const I18N = {
     trust_pt4: '🌐 HTTPS end-to-end',
     foot_line: 'Documents processed in-memory · never stored or logged · HTTPS · MIT licensed',
     legend_title: 'What each button does:',
+    leg_tripwire: 'Free fast scan — known risky-clause patterns ranked for <b>YOUR role</b> (freelancer / SME / consumer / employee / enterprise). Pure rules, no AI.',
     leg_audit: 'Check <b>ONE</b> document clause-by-clause for risky terms (no second version needed).',
     leg_lint: 'Find structural defects — dangling references, unfilled blanks, leftover TBDs. Pure rules, no AI.',
     leg_compare: 'Compare <b>2 versions</b> — what meaning actually changed, the risk, and ⚖ who it favors.',
@@ -709,6 +834,21 @@ const I18N = {
     foot_p_priv: 'เอกสารประมวลผลในหน่วยความจำแล้วทิ้งทันที — เราไม่เก็บ ไม่บันทึก ไม่อ่านเนื้อหา มีแค่คุณเท่านั้นที่เห็นสิ่งที่คุณเปรียบเทียบ',
     foot_h_open: 'โอเพนซอร์ส',
     foot_p_open: 'MIT licensed · ใช้กฎ deterministic + LLM ในเครื่อง (Ollama) เป็นออปชัน ไม่ใช้ cloud AI ไม่ต้องมี API key',
+    tripwire_btn: '🚨 ตรวจ Tripwire (ฟรี)',
+    persona_label: 'คุณคือ',
+    persona_tip: '<b>คุณอยู่ในฐานะไหนของสัญญา?</b><br><br>ข้อสัญญาเดียวกันเสี่ยงต่างกันสำหรับแต่ละคน — Klauz จัดอันดับความเสี่ยงให้คุณตามตัวเลือกนี้<br><br><b>ฟรีแลนซ์</b>: รับงานเดี่ยว / ที่ปรึกษา<br><b>ธุรกิจรายเล็ก</b>: เจ้าของกิจการ SME<br><b>ผู้บริโภค</b>: เซ็น ToS หรือสัญญาส่วนตัว<br><b>พนักงาน</b>: เซ็นสัญญาจ้างงาน<br><b>องค์กรใหญ่</b>: บริษัทใหญ่มีฝ่ายกฎหมาย',
+    persona_freelancer: 'ฟรีแลนซ์',
+    persona_sme: 'ธุรกิจรายเล็ก',
+    persona_consumer: 'ผู้บริโภค',
+    persona_employee: 'พนักงาน',
+    persona_enterprise: 'องค์กรใหญ่',
+    scanning_tripwire: '⏳ กำลังสแกน tripwire ตามบริบทของคุณ…',
+    tripwire_done: '✓ สแกน tripwire เสร็จ',
+    tripwire_found: 'ข้อสุ่มเสี่ยงสำหรับ',
+    tripwire_no_risk: 'ไม่พบ tripwire ที่ตรงกันสำหรับ',
+    tripwire_clean_note: 'ไม่พบรูปแบบข้อสัญญาเสี่ยงที่ตรงกัน — นี่คือสแกนแบบกฎที่เร็ว ถ้าต้องการวิเคราะห์ความหมายลึกใช้ Compare / Audit / Certify',
+    tripwire_why_pa: 'ข้อสัญญาเดียวกัน ตัดสินต่างกันสำหรับแต่ละคน — ผลที่ไฮไลต์ด้านล่างถ่วงน้ำหนักตามฐานะที่คุณเลือก และแสดงให้เห็นด้วยว่าข้อเดียวกันเสี่ยงแค่ไหนสำหรับฝ่ายอื่น (ใต้การ์ดแต่ละใบ)',
+    cross_persona: 'เสี่ยงตามฐานะ:',
     priv: '🔒 HTTPS · ในหน่วยความจำเท่านั้น · ไม่เก็บเอกสาร',
     trust_title: 'ออกแบบให้เป็นส่วนตัว — มีแค่คุณเท่านั้นที่เห็นเอกสาร',
     trust_intro: 'Klauz ประมวลผลเอกสารคุณในหน่วยความจำเท่านั้น แล้วทิ้งทันที — เราไม่เก็บ ไม่บันทึก ไม่อ่านเนื้อหาไฟล์ที่คุณอัปโหลด ไม่มีใครเห็นสิ่งที่คุณเปรียบเทียบนอกจากตัวคุณเอง',
@@ -718,6 +858,7 @@ const I18N = {
     trust_pt4: '🌐 HTTPS ทั้งเส้นทาง',
     foot_line: 'ประมวลผลในหน่วยความจำ · ไม่เก็บ/ไม่บันทึก · HTTPS · MIT',
     legend_title: 'แต่ละปุ่มทำอะไร:',
+    leg_tripwire: 'สแกนข้อเสี่ยงฟรี เร็ว — รูปแบบข้อสัญญาเสี่ยงที่รู้จัก จัดอันดับตาม <b>ฐานะของคุณ</b> (ฟรีแลนซ์/SME/ผู้บริโภค/พนักงาน/องค์กร) กฎล้วน ไม่ใช้ AI',
     leg_audit: 'ตรวจสัญญา <b>ฉบับเดียว</b> ทีละข้อ หาข้อเสี่ยง (ไม่ต้องมี 2 ฉบับ)',
     leg_lint: 'หาจุดบกพร่องเชิงโครงสร้าง — อ้างอิงค้าง, ช่องว่างไม่กรอก, TBD ตกค้าง ใช้กฎล้วน ไม่มี AI',
     leg_compare: 'เทียบ <b>2 ฉบับ</b> — ความหมายเปลี่ยนจริงไหม, เสี่ยงแค่ไหน, และ ⚖ เอียงเข้าข้างใคร',
@@ -884,6 +1025,53 @@ function renderLint(rep) {
     html += '<div class="change ' + (err ? 'high' : 'medium') + '">' + icon + ' <span class="muted">L' + f.line + '</span> ' + esc(LANG === 'th' ? f.th : f.en) + '</div>';
   }
   if (!rep.findings.length) html += '<div class="muted">' + t('lint_clean') + '</div>';
+  out.innerHTML = html;
+}
+async function runTripwire() {
+  const text = document.getElementById('textA').value.trim();
+  const dA = document.getElementById('dropA'); dA.style.borderColor = '';
+  if (!text) { dA.style.borderColor = 'var(--danger)'; banner(t('need_left'), 'err'); return; }
+  const b = document.getElementById('tripwire'); b.disabled = true;
+  banner(t('scanning_tripwire'), 'busy'); document.getElementById('out').innerHTML = '';
+  try {
+    const persona = document.getElementById('persona').value;
+    const r = await fetch('/tripwire', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, persona }) });
+    const rep = await r.json();
+    if (rep.error) { banner('error: ' + rep.error, 'err'); b.disabled = false; return; }
+    renderTripwire(rep, persona); banner(t('tripwire_done'), 'ok');
+  } catch (e) { banner('error: ' + e.message, 'err'); }
+  b.disabled = false;
+}
+function renderTripwire(rep, persona) {
+  const s = rep.summary, out = document.getElementById('out');
+  const pLabel = t('persona_' + persona);
+  if (s.total === 0) {
+    out.innerHTML =
+      '<div class="verdict v-ok">✅ ' + esc(t('tripwire_no_risk')) + ' <b>' + esc(pLabel) + '</b></div>' +
+      '<div class="muted" style="margin:10px 0">' + esc(t('tripwire_clean_note')) + '</div>';
+    return;
+  }
+  const vc = s.high ? 'v-high' : s.medium ? 'v-mid' : 'v-ok';
+  let html = '<div class="verdict ' + vc + '">🚨 ' + s.total + ' ' + t('tripwire_found') + ' <b>' + esc(pLabel) + '</b>' +
+    ' &nbsp;<span style="font-family:var(--mono);font-size:14px;font-weight:500;letter-spacing:.02em">' +
+      s.high + ' <span style="color:var(--danger)">high</span> · ' +
+      s.medium + ' <span style="color:var(--warn)">medium</span> · ' +
+      s.low + ' <span style="color:var(--text-3)">low</span></span></div>';
+  html += '<div class="muted" style="margin:10px 0 18px">' + t('tripwire_why_pa') + '</div>';
+  for (const f of rep.findings) {
+    const lbl = (LANG === 'th' && f.label.th) ? f.label.th : f.label.en;
+    const why = (LANG === 'th' && f.why.th) ? f.why.th : f.why.en;
+    html += '<div class="tripwire-card risk-' + f.risk + '">';
+    html += '<div class="tripwire-head"><span class="risk-badge risk-' + f.risk + '">' + f.risk + '</span> <span class="tripwire-label">' + esc(lbl) + '</span></div>';
+    html += '<div class="tripwire-snippet">' + esc(f.snippet) + '</div>';
+    html += '<div class="tripwire-why">' + esc(why) + '</div>';
+    html += '<div class="tripwire-personas-row"><span class="tripwire-personas-lbl">' + esc(t('cross_persona')) + '</span><div class="tripwire-personas">';
+    for (const p of ['freelancer','sme','consumer','employee','enterprise']) {
+      const rsk = f.all_risks[p] || 'low';
+      html += '<div class="tw-pers' + (p === persona ? ' tw-pers-active' : '') + '"><span class="tw-pers-name">' + esc(t('persona_' + p)) + '</span><span class="risk-pip risk-' + rsk + '">' + rsk + '</span></div>';
+    }
+    html += '</div></div></div>';
+  }
   out.innerHTML = html;
 }
 let LAST_CERT = null;
