@@ -72,7 +72,38 @@ const SYN = [
 const ARTICLE_TRIM = /\b(the|a|an|this|that|these|those)\s+/gi;
 
 // 7) Thai double-negation — limited but useful
-const TH_DBL_NEG = /ไม่\s*(ปฏิเสธ|ละเว้น|ละเลย|งด)\s*(ที่จะ|การ)?\s*/g;
+const TH_DBL_NEG = /ไม่\s*(ปฏิเสธ|ละเว้น|ละเลย|งด|หลีกเลี่ยง)\s*(ที่จะ|การ)?\s*/g;
+
+// 7b) Thai legal-phrase synonyms — collapse common legalese to one token each
+const TH_SYN = [
+  // notice equivalents — capture "ส่งหนังสือบอกกล่าว" (send notice) and "แจ้ง…เป็นลายลักษณ์อักษร" (notify in writing) as one act
+  [/(ส่ง\s*หนังสือ\s*บอกกล่าว|ส่ง\s*บอกกล่าว\s*เป็น\s*หนังสือ|หนังสือบอกกล่าว|แจ้ง(?:ให้ทราบ)?\s*เป็น\s*ลายลักษณ์อักษร|แจ้ง\s*เป็น\s*หนังสือ|บอกกล่าวเป็นลายลักษณ์อักษร)/g, ' TH_WRITTEN_NOTICE '],
+  // breach / violation
+  [/(ฝ่าฝืน|ละเมิด|ผิดสัญญา|ผิดข้อตกลง)/g, ' TH_BREACH '],
+  // termination / cancellation
+  [/(เลิกสัญญา|ยกเลิกสัญญา|บอกเลิก|สิ้นสุดสัญญา)/g, ' TH_TERMINATE '],
+  // payment
+  [/(ชำระเงิน|จ่ายเงิน|ชำระค่า|ชำระค่าบริการ)/g, ' TH_PAY '],
+  // delivery
+  [/(ส่งมอบ|จัดส่ง|ส่งให้|มอบให้)/g, ' TH_DELIVER '],
+  // compliance
+  [/(ปฏิบัติตาม|ทำตาม|ดำเนินการตาม)/g, ' TH_COMPLY '],
+  // confidentiality
+  [/(รักษาความลับ|เก็บเป็นความลับ|ไม่เปิดเผย)/g, ' TH_CONFIDENTIAL '],
+  // promptness — Thai equivalents
+  [/(โดยเร็ว|โดยพลัน|ทันที|โดยไม่ชักช้า|โดยไม่ล่าช้า|ภายในเวลาอันสมควร)/g, ' TH_PROMPTLY '],
+  // mandatory modal (Thai)
+  [/(จะต้อง|ต้อง|มีหน้าที่|จำต้อง)/g, ' TH_MUST '],
+  // permissive modal (Thai)
+  [/(อาจ|สามารถ|มีสิทธิ)/g, ' TH_MAY '],
+  // weak modal (Thai)
+  [/(ควร|ควรจะ|พึง)/g, ' TH_SHOULD '],
+  // parties
+  [/(คู่สัญญา|ฝ่าย)/g, ' TH_PARTY '],
+];
+
+// 7c) Thai filler — zero semantic content
+const TH_FILLER = /(โดยที่|ทั้งนี้\s*และทั้งนั้น|และทั้งนี้|ตามที่ระบุไว้ในสัญญานี้)/g;
 
 export function canonicalize(text) {
   if (!text) return '';
@@ -98,8 +129,12 @@ export function canonicalize(text) {
   s = s.replace(MODAL_PERM, ' M_PERM ');
   s = s.replace(MODAL_WEAK, ' M_WEAK ');
 
-  // 5) synonym clustering
+  // 5) synonym clustering — English
   for (const [re, tok] of SYN) s = s.replace(re, tok);
+
+  // 5b) Thai legal-phrase synonyms
+  for (const [re, tok] of TH_SYN) s = s.replace(re, tok);
+  s = s.replace(TH_FILLER, ' ');
 
   // 6) articles
   s = s.replace(ARTICLE_TRIM, ' ');

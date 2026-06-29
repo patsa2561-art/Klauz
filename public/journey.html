@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Klauz · Your Journey</title>
+<meta name="robots" content="noindex,nofollow" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23b8451f'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='40' fill='white'%3E%E2%9A%96%3C/text%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg: #faf8f5; --surface: #ffffff; --surface-2: #f5f3ef; --border: #ebe5dc;
+    --text: #1c1815; --text-2: #5f574e; --text-3: #a39a8d;
+    --accent: #b8451f; --accent-hover: #963a1b; --accent-soft: #fbf0e8;
+    --ok: #2f7d4c; --ok-soft: #ecf6ee;
+    --warn: #a16207; --warn-soft: #fdf6e3;
+    --danger: #a8351b; --danger-soft: #fbeee8;
+    --serif: 'Iowan Old Style','Hoefler Text', Georgia, 'Noto Serif Thai', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Noto Sans Thai', system-ui, sans-serif;
+    --mono: ui-monospace, 'JetBrains Mono', 'SF Mono', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+  header {
+    padding: 22px 32px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .brand-mark {
+    width: 38px; height: 38px; border-radius: 11px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    color: white; display: grid; place-items: center; font-size: 19px;
+    box-shadow: 0 6px 18px rgb(184 69 31 / .22);
+  }
+  .brand-name { font: 600 22px/1 var(--serif); }
+  .journey-pill {
+    background: var(--text); color: var(--surface);
+    font: 700 10.5px var(--sans); padding: 5px 9px; border-radius: 4px;
+    letter-spacing: .1em; margin-left: 4px;
+  }
+  .spacer { flex: 1; }
+  header a { color: var(--text-2); font-size: 13px; text-decoration: none; border-bottom: 1px solid var(--border-strong, #d8d1c4); }
+  header a:hover { color: var(--accent); }
+  .shell { max-width: 1080px; margin: 0 auto; padding: 36px 32px 80px; }
+  h1 { font: 600 30px/1.1 var(--serif); margin: 0 0 6px; letter-spacing: -.02em; }
+  .sub { color: var(--text-2); margin: 0 0 26px; font-size: 14px; max-width: 720px; line-height: 1.6; }
+  .privacy-note {
+    background: var(--ok-soft);
+    border: 1px solid color-mix(in srgb, var(--ok) 25%, var(--border));
+    color: var(--ok);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 28px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; }
+  .stat .label { font-size: 11px; color: var(--text-2); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+  .stat .num { font: 600 28px var(--serif); margin-top: 6px; color: var(--accent); line-height: 1.1; }
+  .stat.small .num { font-size: 18px; }
+
+  .actions-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  button {
+    background: var(--text); color: var(--surface);
+    border: 1px solid transparent; border-radius: 8px;
+    padding: 9px 14px; font: 600 13px var(--sans); cursor: pointer;
+    transition: transform .12s, box-shadow .12s;
+  }
+  button:hover { transform: translateY(-1px); box-shadow: 0 1px 4px rgb(0 0 0 / .08); }
+  button.ghost { background: transparent; color: var(--text); border-color: #d8d1c4; }
+  button.ghost:hover { background: var(--surface-2); }
+  button.danger { background: var(--danger); color: white; }
+
+  .section-h {
+    font: 700 11px var(--sans);
+    text-transform: uppercase; letter-spacing: .08em;
+    color: var(--text-2);
+    margin: 28px 0 12px;
+  }
+
+  .timeline { display: flex; flex-direction: column; gap: 10px; }
+  .entry {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 18px;
+    display: grid; grid-template-columns: 76px 1fr auto; gap: 14px; align-items: center;
+  }
+  .entry .when { font: 600 12px var(--mono); color: var(--text-2); }
+  .entry .what { font-size: 14px; }
+  .entry .what .type { font-weight: 700; color: var(--text); }
+  .entry .what .meta { color: var(--text-3); font-size: 12.5px; }
+  .entry .badges { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+  .pill {
+    font: 700 10px var(--sans);
+    padding: 3px 8px; border-radius: 4px;
+    color: white; text-transform: uppercase; letter-spacing: .04em;
+  }
+  .pill.high { background: var(--danger); }
+  .pill.medium { background: var(--warn); }
+  .pill.low { background: var(--text-3); }
+  .pill.ghost { background: var(--surface-2); color: var(--text-2); }
+
+  .crossref { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-top: 12px; }
+  .crossref-item { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed var(--border); font-size: 13.5px; }
+  .crossref-item:last-child { border-bottom: 0; }
+  .crossref-item .ct { color: var(--accent); font: 700 13px var(--mono); }
+
+  .empty {
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--text-3);
+    background: var(--surface);
+    border: 1px dashed var(--border-strong, #d8d1c4);
+    border-radius: 14px;
+  }
+  .empty h2 { font: 600 22px var(--serif); color: var(--text-2); margin: 0 0 8px; }
+  .empty p { margin: 0 0 16px; font-size: 14px; }
+  .empty a { color: var(--accent); font-weight: 600; }
+
+  @media (max-width: 720px) {
+    .shell { padding: 24px 18px 60px; }
+    h1 { font-size: 24px; }
+    .entry { grid-template-columns: 1fr; gap: 6px; }
+    .entry .badges { justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <a href="/" style="border:0;display:flex;align-items:center;gap:14px">
+    <div class="brand-mark">⚖</div>
+    <div class="brand-name">Klauz</div>
+  </a>
+  <span class="journey-pill">JOURNEY</span>
+  <span class="spacer"></span>
+  <a href="/">← back to Klauz</a>
+</header>
+<main class="shell">
+  <h1>Your Klauz Journey</h1>
+  <p class="sub">A personal log of every contract you've reviewed — patterns, parties, drift over time. Cross-reference clauses across your history to spot what counterparts keep slipping in.</p>
+
+  <div class="privacy-note">
+    🔒 <b>100% private.</b> This page reads from your browser's localStorage only — nothing ever leaves your device. Klauz the server cannot see your journey. Clearing browser data wipes it.
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="actions-row">
+    <button onclick="exportJourney()">⬇ Export JSON</button>
+    <button class="ghost" onclick="importJourney()">⬆ Import</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="onImport(this)" />
+    <button class="danger" onclick="clearJourney()" style="margin-left:auto">Clear all</button>
+  </div>
+
+  <div class="section-h">Cross-reference · clauses you've seen before</div>
+  <div id="crossref"></div>
+
+  <div class="section-h">Timeline</div>
+  <div id="timeline"></div>
+</main>
+
+<script>
+const KEY = 'klauz_journey_v1';
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; }
+}
+function save(entries) {
+  localStorage.setItem(KEY, JSON.stringify(entries));
+}
+
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function fmtDate(iso) { try { return new Date(iso).toISOString().slice(0,10) + ' · ' + new Date(iso).toTimeString().slice(0,5); } catch { return iso; } }
+
+function render() {
+  const entries = load();
+  // sort newest first
+  entries.sort((a,b) => (b.ts || '').localeCompare(a.ts || ''));
+
+  if (entries.length === 0) {
+    document.getElementById('stats').innerHTML = '';
+    document.getElementById('crossref').innerHTML = '';
+    document.getElementById('timeline').innerHTML = `
+      <div class="empty">
+        <h2>No entries yet</h2>
+        <p>Run a Certify or Tripwire on <a href="/">Klauz</a> and click "💾 Save to Journey" — your history will appear here.</p>
+        <p style="font-size:12px;color:var(--text-3)">Everything stays in this browser. Klauz the server can't see it.</p>
+      </div>`;
+    return;
+  }
+
+  // stats
+  const uniqueParties = new Set();
+  let totalHigh = 0, totalFindings = 0;
+  const catCount = {};
+  const labelCount = {};
+  for (const e of entries) {
+    (e.summary?.parties || []).forEach(p => uniqueParties.add(p));
+    totalHigh += e.summary?.high_risk || 0;
+    totalFindings += (e.summary?.findings || []).length;
+    for (const f of (e.summary?.findings || [])) {
+      catCount[f.category || 'other'] = (catCount[f.category || 'other'] || 0) + 1;
+      labelCount[f.label || f.id || 'unknown'] = (labelCount[f.label || f.id || 'unknown'] || 0) + 1;
+    }
+  }
+  const topCat = Object.entries(catCount).sort((a,b)=>b[1]-a[1])[0];
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><div class="label">total reviews</div><div class="num">${entries.length}</div></div>
+    <div class="stat"><div class="label">total findings</div><div class="num">${totalFindings}</div></div>
+    <div class="stat"><div class="label">unique parties</div><div class="num">${uniqueParties.size}</div></div>
+    <div class="stat small"><div class="label">most common</div><div class="num">${esc(topCat ? topCat[0] : '—')}</div></div>`;
+
+  // cross-reference — clauses appearing in 2+ entries
+  const recurring = Object.entries(labelCount).filter(([,n]) => n >= 2).sort((a,b)=>b[1]-a[1]);
+  if (recurring.length) {
+    let crh = '<div class="crossref">';
+    crh += '<div style="font-size:13px;color:var(--text-2);margin-bottom:10px">Patterns that keep showing up in your contracts:</div>';
+    for (const [lbl, n] of recurring.slice(0, 15)) {
+      crh += `<div class="crossref-item"><span>${esc(lbl)}</span><span class="ct">×${n}</span></div>`;
+    }
+    crh += '</div>';
+    document.getElementById('crossref').innerHTML = crh;
+  } else {
+    document.getElementById('crossref').innerHTML = '<div class="muted" style="color:var(--text-3);font-size:13px;padding:8px 0">No recurring patterns yet — keep reviewing contracts to find what counterparts repeat.</div>';
+  }
+
+  // timeline
+  document.getElementById('timeline').innerHTML = '<div class="timeline">' +
+    entries.map(e => `
+      <div class="entry">
+        <div class="when">${esc(fmtDate(e.ts))}</div>
+        <div class="what">
+          <div class="type">${esc(e.type || 'review')}${e.title ? ' · ' + esc(e.title) : ''}</div>
+          <div class="meta">${esc((e.summary?.parties || []).join(' / ') || '—')}${e.summary?.persona ? ' · persona: ' + esc(e.summary.persona) : ''}${e.summary?.changes ? ' · ' + e.summary.changes + ' changes' : ''}</div>
+        </div>
+        <div class="badges">
+          ${e.summary?.high_risk ? `<span class="pill high">${e.summary.high_risk} high</span>` : ''}
+          ${e.summary?.medium_risk ? `<span class="pill medium">${e.summary.medium_risk} med</span>` : ''}
+          ${(e.summary?.findings?.length || 0) === 0 && (e.summary?.changes || 0) === 0 ? '<span class="pill ghost">clean</span>' : ''}
+        </div>
+      </div>`).join('') + '</div>';
+}
+
+function clearJourney() {
+  if (!confirm('Erase all entries? This cannot be undone.')) return;
+  localStorage.removeItem(KEY);
+  render();
+}
+
+function exportJourney() {
+  const entries = load();
+  const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'klauz-journey-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importJourney() { document.getElementById('importFile').click(); }
+function onImport(input) {
+  const f = input.files && input.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const imported = JSON.parse(r.result);
+      if (!Array.isArray(imported)) throw new Error('not an array');
+      const existing = load();
+      // dedupe by id (keep newest)
+      const seen = new Set(existing.map(e => e.id));
+      let added = 0;
+      for (const e of imported) {
+        if (!e.id || !seen.has(e.id)) { existing.push(e); seen.add(e.id); added++; }
+      }
+      save(existing);
+      render();
+      alert(`Imported ${added} new entries.`);
+    } catch (e) {
+      alert('Import failed: ' + e.message);
+    }
+  };
+  r.readAsText(f);
+  input.value = '';
+}
+
+// Expose a global so the main Klauz page can write entries here
+window.klauzSaveToJourney = function(entry) {
+  if (!entry || typeof entry !== 'object') return false;
+  entry.id = entry.id || ('k_' + Date.now() + '_' + Math.random().toString(36).slice(2,8));
+  entry.ts = entry.ts || new Date().toISOString();
+  const all = load();
+  all.push(entry);
+  save(all);
+  return true;
+};
+
+render();
+</script>
+</body>
+</html>

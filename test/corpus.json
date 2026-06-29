@@ -44,6 +44,19 @@
     { "id": "hard_syn8", "old": "The parties shall execute this agreement.", "new": "The parties shall sign this agreement.", "meaning_changed": false, "note": "execute = sign (synonym in this context)" },
     { "id": "hard_rep1", "old": "The Seller makes the following warranties.", "new": "The Seller makes the following representations and warranties.", "meaning_changed": true, "note": "adds 'representations' — a distinct legal category" },
     { "id": "hard_neg4", "old": "No employee may disclose data.", "new": "No employee may disclose or share data.", "meaning_changed": true, "note": "scope widened: 'or share'" },
-    { "id": "hard_syn9", "old": "The Provider shall deliver promptly.", "new": "The Provider shall deliver in a timely manner.", "meaning_changed": false, "note": "promptly ~ in a timely manner (synonym)" }
+    { "id": "hard_syn9", "old": "The Provider shall deliver promptly.", "new": "The Provider shall deliver in a timely manner.", "meaning_changed": false, "note": "promptly ~ in a timely manner (synonym)" },
+
+    { "id": "hard_pdpa1", "old": "We process your data for the specific purpose of fulfilling your order.", "new": "We process your data for any purpose we deem appropriate.", "meaning_changed": true, "note": "narrow purpose -> blanket consent (PDPA §22 violation)" },
+    { "id": "hard_class1", "old": "You retain all rights to bring claims individually or as part of a class action.", "new": "You waive any right to bring or participate in any class action.", "meaning_changed": true, "note": "added class-action waiver" },
+    { "id": "hard_fee1", "old": "Each party bears its own attorneys' fees.", "new": "The prevailing party shall be entitled to attorneys' fees.", "meaning_changed": true, "note": "American rule -> fee-shifting" },
+    { "id": "hard_indem1", "old": "Each party shall indemnify the other for third-party claims.", "new": "You shall indemnify the Company for third-party claims.", "meaning_changed": true, "note": "mutual -> one-way indemnity" },
+    { "id": "hard_fm1", "old": "Force majeure includes acts of God, war, and natural disaster.", "new": "Force majeure includes acts of God, war, natural disaster, or any economic conditions.", "meaning_changed": true, "note": "broadened to economic conditions (not real force majeure)" },
+    { "id": "hard_mat1", "old": "Either party may terminate for any breach.", "new": "Either party may terminate for material breach.", "meaning_changed": true, "note": "any -> material narrows termination right" },
+    { "id": "hard_tax1", "old": "The price is $1,000 inclusive of VAT.", "new": "The price is $1,000 exclusive of VAT.", "meaning_changed": true, "note": "tax inclusion flipped" },
+    { "id": "hard_sev1", "old": "If any provision is invalid, the entire agreement is void.", "new": "If any provision is invalid, that provision shall be severed and the remainder shall remain in effect.", "meaning_changed": true, "note": "destroyed-on-invalidity -> severability" },
+    { "id": "hard_arb1", "old": "Disputes shall be resolved in the courts of New York.", "new": "Disputes shall be resolved by binding arbitration in Delaware.", "meaning_changed": true, "note": "courts -> binding arbitration (different forum + waiver of jury)" },
+    { "id": "hard_ren1", "old": "This agreement shall renew only upon mutual written agreement.", "new": "This agreement shall auto-renew for successive 1-year terms unless cancelled.", "meaning_changed": true, "note": "opt-in renewal -> opt-out auto-renewal" },
+    { "id": "hard_dneg2", "old": "The Vendor must not fail to deliver the goods on time.", "new": "The Vendor must deliver the goods on time.", "meaning_changed": false, "note": "double negation collapse" },
+    { "id": "hard_syn10", "old": "The Buyer shall promptly notify the Seller of defects.", "new": "The Buyer shall immediately inform the Seller of defects.", "meaning_changed": false, "note": "promptly=immediately, notify=inform" }
   ]
 }

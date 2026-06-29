@@ -144,6 +144,22 @@ export function serve(port = 7700, opts = {}) {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify(scanTripwire(body.text || '', body.persona || 'sme')));
       }
+      if (req.method === 'POST' && req.url === '/templates') {
+        // Template fingerprint — known ToS signatures + known-issue annotations.
+        const body = JSON.parse(await readBody(req));
+        const { identifyTemplates } = await import('./templates.js');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ matches: identifyTemplates(body.text || '') }));
+      }
+      if (req.method === 'GET' && _pn === '/journey') {
+        // Personal Klauz Graph — client-side localStorage page (privacy preserving:
+        // history never reaches the server, lives only in the user's browser).
+        try {
+          const html = fs.readFileSync(path.join(__dirname, '..', 'public', 'journey.html'), 'utf8');
+          res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+          return res.end(html);
+        } catch (e) { /* fall through to 404 */ }
+      }
       res.writeHead(404); res.end('not found');
     } catch (e) {
       res.writeHead(500, { 'Content-Type': 'application/json' });

@@ -454,6 +454,48 @@
   .risk-badge.risk-high { background: var(--danger); }
   .risk-badge.risk-medium { background: var(--warn); }
   .risk-badge.risk-low { background: var(--text-3); }
+  .cat-pill {
+    font: 600 10.5px var(--sans);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    padding: 2px 9px;
+    border-radius: var(--r-pill);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .cite-row {
+    font: 12px var(--sans);
+    color: var(--accent);
+    margin: 8px 0 10px;
+    padding: 6px 12px;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+  .cite-row b { font-weight: 700; }
+  .journey-link {
+    color: var(--text-2);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-pill);
+    background: var(--surface);
+    margin-right: 10px;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .journey-link:hover { color: var(--accent); border-color: var(--accent); }
+  .template-banner {
+    background: var(--purple-soft);
+    border: 1px solid color-mix(in srgb, var(--purple) 25%, var(--border));
+    color: var(--purple);
+    border-radius: var(--r-md);
+    padding: 12px 16px;
+    margin: 12px 0 0;
+    font-size: 13px;
+  }
+  .template-banner b { color: var(--purple); }
   .tripwire-snippet {
     margin: 0 0 12px;
     padding: 10px 14px;
@@ -581,6 +623,7 @@
       <div class="brand-tagline" data-i18n="priv"></div>
     </div>
   </a>
+  <a href="/journey" class="journey-link" title="Your private contract history (lives in your browser)">📓 <span data-i18n="journey_link">Journey</span></a>
   <nav class="langtog">
     <button id="lang-en" onclick="setLang('en')">EN</button>
     <button id="lang-th" onclick="setLang('th')">ไทย</button>
@@ -743,6 +786,9 @@ const I18N = {
     tripwire_why_pa: 'Same clause, different verdict per persona. Highlights below are weighted for your selected role — and we show the SAME clause re-ranked for every other persona under each card.',
     cross_persona: 'risk by persona:',
     tripwire_checked: 'patterns we scanned for',
+    journey_link: 'Journey',
+    save_journey: '💾 Save to my Journey',
+    saved_journey: 'Saved to your Journey (stored in this browser only)',
     priv: '🔒 HTTPS · in-memory only · zero document storage',
     trust_title: 'Private by design — only you see your documents',
     trust_intro: 'Klauz processes your documents in memory only and discards them immediately. We do not store, log, or read the content of any file you upload. Nobody but you ever sees what you compare.',
@@ -851,6 +897,9 @@ const I18N = {
     tripwire_why_pa: 'ข้อสัญญาเดียวกัน ตัดสินต่างกันสำหรับแต่ละคน — ผลที่ไฮไลต์ด้านล่างถ่วงน้ำหนักตามฐานะที่คุณเลือก และแสดงให้เห็นด้วยว่าข้อเดียวกันเสี่ยงแค่ไหนสำหรับฝ่ายอื่น (ใต้การ์ดแต่ละใบ)',
     cross_persona: 'เสี่ยงตามฐานะ:',
     tripwire_checked: 'รูปแบบที่ Klauz ตรวจหา',
+    journey_link: 'ไดอารี่ของฉัน',
+    save_journey: '💾 บันทึกเข้า Journey',
+    saved_journey: 'บันทึกแล้ว (อยู่ในเบราว์เซอร์เท่านั้น ไม่ออกจากเครื่อง)',
     priv: '🔒 HTTPS · ในหน่วยความจำเท่านั้น · ไม่เก็บเอกสาร',
     trust_title: 'ออกแบบให้เป็นส่วนตัว — มีแค่คุณเท่านั้นที่เห็นเอกสาร',
     trust_intro: 'Klauz ประมวลผลเอกสารคุณในหน่วยความจำเท่านั้น แล้วทิ้งทันที — เราไม่เก็บ ไม่บันทึก ไม่อ่านเนื้อหาไฟล์ที่คุณอัปโหลด ไม่มีใครเห็นสิ่งที่คุณเปรียบเทียบนอกจากตัวคุณเอง',
@@ -1075,7 +1124,16 @@ function renderTripwire(rep, persona) {
     const lbl = (LANG === 'th' && f.label.th) ? f.label.th : f.label.en;
     const why = (LANG === 'th' && f.why.th) ? f.why.th : f.why.en;
     html += '<div class="tripwire-card risk-' + f.risk + '">';
-    html += '<div class="tripwire-head"><span class="risk-badge risk-' + f.risk + '">' + f.risk + '</span> <span class="tripwire-label">' + esc(lbl) + '</span></div>';
+    html += '<div class="tripwire-head">' +
+      '<span class="risk-badge risk-' + f.risk + '">' + f.risk + '</span> ' +
+      '<span class="tripwire-label">' + esc(lbl) + '</span>' +
+      (f.category ? ' <span class="cat-pill">' + esc(f.category) + '</span>' : '') +
+      '</div>';
+    if (f.cite) {
+      const citeTh = f.cite.th ? '<b>' + esc(f.cite.th) + '</b>' : '';
+      const citeGlobal = f.cite.global ? esc(f.cite.global) : '';
+      html += '<div class="cite-row">📜 ' + (LANG === 'th' ? 'อ้างอิงกฎหมาย: ' : 'Legal reference: ') + [citeTh, citeGlobal].filter(Boolean).join(' · ') + '</div>';
+    }
     html += '<div class="tripwire-snippet">' + esc(f.snippet) + '</div>';
     html += '<div class="tripwire-why">' + esc(why) + '</div>';
     html += '<div class="tripwire-personas-row"><span class="tripwire-personas-lbl">' + esc(t('cross_persona')) + '</span><div class="tripwire-personas">';
@@ -1085,9 +1143,92 @@ function renderTripwire(rep, persona) {
     }
     html += '</div></div></div>';
   }
+  // Add Save-to-Journey row
+  html += '<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">'
+    + '<button class="btn-ghost" onclick="saveTripwireToJourney()" data-i18n="save_journey"></button>'
+    + '<a class="journey-link" href="/journey">📓 ' + esc(t('journey_link')) + ' →</a>'
+    + '</div>';
   out.innerHTML = html;
+  // store for save button
+  window._LAST_TRIPWIRE = { rep, persona };
+  // also call /templates in the background to surface known-template warnings
+  fetch('/templates', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ text: document.getElementById('textA').value }) })
+    .then(r => r.json()).then(j => {
+      if (j.matches && j.matches.length) {
+        const m = j.matches[0];
+        const note = document.createElement('div');
+        note.className = 'template-banner';
+        note.innerHTML = '🪪 <b>' + esc(m.name) + '</b> ' + (LANG === 'th' ? 'ดูเหมือนเอกสารนี้คือเทมเพลตที่รู้จัก. ข้อเสี่ยงทั่วไป:' : 'detected — known issues for this template:') +
+          '<ul style="margin:6px 0 0 18px;padding:0">' +
+          m.issues.map(i => '<li><b>' + esc((LANG === 'th' ? i.th : i.en)) + '</b></li>').join('') +
+          '</ul>';
+        document.getElementById('out').insertBefore(note, document.getElementById('out').firstChild);
+      }
+    }).catch(()=>{});
   out.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+function saveTripwireToJourney() {
+  if (!window._LAST_TRIPWIRE) return;
+  const { rep, persona } = window._LAST_TRIPWIRE;
+  const entry = {
+    id: 'k_' + Date.now() + '_' + Math.random().toString(36).slice(2,8),
+    ts: new Date().toISOString(),
+    type: 'tripwire',
+    title: 'Tripwire scan',
+    summary: {
+      persona,
+      parties: (document.getElementById('parties').value || '').split(',').map(s=>s.trim()).filter(Boolean),
+      findings: (rep.findings || []).map(f => ({
+        id: f.id,
+        label: (LANG === 'th' && f.label && f.label.th) ? f.label.th : (f.label && f.label.en) || f.id,
+        category: f.category, risk: f.risk,
+      })),
+      high_risk: rep.summary.high,
+      medium_risk: rep.summary.medium,
+      total: rep.summary.total,
+    },
+  };
+  try {
+    const all = JSON.parse(localStorage.getItem('klauz_journey_v1') || '[]');
+    all.push(entry);
+    localStorage.setItem('klauz_journey_v1', JSON.stringify(all));
+    banner('💾 ' + t('saved_journey'), 'ok');
+  } catch (e) { banner('save failed: ' + e.message, 'err'); }
+}
+
+function saveCertToJourney() {
+  if (!LAST_CERT) return;
+  const c = LAST_CERT;
+  const entry = {
+    id: 'k_' + Date.now() + '_' + Math.random().toString(36).slice(2,8),
+    ts: new Date().toISOString(),
+    type: 'certify',
+    title: 'PCR certify',
+    summary: {
+      parties: (document.getElementById('parties').value || '').split(',').map(s=>s.trim()).filter(Boolean),
+      clauses_before: c.summary && c.summary.clauses_before,
+      clauses_after: c.summary && c.summary.clauses_after,
+      changes: (c.summary && c.summary.changes) || 0,
+      deterministic_changes: c.summary && c.summary.deterministic_changes,
+      model_asserted: c.summary && c.summary.model_asserted,
+      findings: (c.entries || []).filter(e => e.verdict !== 'IDENTICAL').map(e => ({
+        id: e.verdict, label: e.verdict, category: 'pcr',
+        risk: e.verdict === 'TEXT_CHANGED' ? 'medium' : 'high',
+      })),
+      high_risk: (c.entries || []).filter(e => ['MODAL_SHIFT','NEGATION_FLIP','PARTY_SWAP'].includes(e.verdict)).length,
+      medium_risk: (c.entries || []).filter(e => ['NUMBER_CHANGED','TEXT_CHANGED'].includes(e.verdict)).length,
+      merkle: c.merkleRoot,
+    },
+  };
+  try {
+    const all = JSON.parse(localStorage.getItem('klauz_journey_v1') || '[]');
+    all.push(entry);
+    localStorage.setItem('klauz_journey_v1', JSON.stringify(all));
+    banner('💾 ' + t('saved_journey'), 'ok');
+  } catch (e) { banner('save failed: ' + e.message, 'err'); }
+}
+
 let LAST_CERT = null;
 async function runCertify() {
   const oldT = document.getElementById('textA').value.trim(), newT = document.getElementById('textB').value.trim();
@@ -1129,7 +1270,10 @@ function renderCert(rep) {
   html += '<div class="ev" style="margin-top:14px;word-break:break-all;font-family:var(--mono);font-size:11.5px;background:var(--surface-2);padding:10px 12px;border-radius:8px">sig (' + c.alg + '): ' + esc(c.signature.slice(0, 44)) + '…<br>merkle: ' + esc(c.merkleRoot.slice(0, 44)) + '…</div>';
   html += '<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">'
     + '<button class="btn-purple" onclick="downloadCert()">' + t('pcr_dl') + '</button>'
-    + '<button class="btn-ghost" onclick="recheckCert()">' + t('pcr_recheck') + '</button></div>';
+    + '<button class="btn-ghost" onclick="recheckCert()">' + t('pcr_recheck') + '</button>'
+    + '<button class="btn-ghost" onclick="saveCertToJourney()" data-i18n-static>' + t('save_journey') + '</button>'
+    + '<a class="journey-link" href="/journey">📓 ' + esc(t('journey_link')) + ' →</a>'
+    + '</div>';
   out.innerHTML = html;
 }
 function downloadCert() {
