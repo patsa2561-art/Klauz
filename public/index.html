@@ -40,12 +40,17 @@
   html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   body {
     margin: 0;
-    background: var(--bg);
     color: var(--text);
     font: 15px/1.55 var(--sans);
     letter-spacing: -.005em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* subtle warm paper feel — almost imperceptible, adds "real" weight */
+    background:
+      radial-gradient(ellipse 1200px 600px at 50% -200px, color-mix(in srgb, var(--accent) 4%, transparent) 0%, transparent 70%),
+      radial-gradient(ellipse 800px 400px at 90% 30%, color-mix(in srgb, var(--accent) 3%, transparent) 0%, transparent 60%),
+      var(--bg);
+    background-attachment: fixed;
   }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
@@ -81,20 +86,73 @@
   .langtog button:hover { transform: none; }
 
   /* hero */
-  .hero { padding: 64px 0 28px; }
+  .hero { padding: 80px 0 32px; text-align: center; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font: 600 11.5px var(--sans);
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--border));
+    border-radius: var(--r-pill);
+    padding: 6px 14px;
+    margin-bottom: 22px;
+  }
+  .hero-eyebrow::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+  }
   .hero-title {
     font-family: var(--serif);
-    font-size: clamp(30px, 4.6vw, 48px);
+    font-size: clamp(34px, 5.4vw, 58px);
     font-weight: 600;
-    letter-spacing: -.025em;
-    line-height: 1.08;
-    margin: 0 0 16px;
-    max-width: 760px;
+    letter-spacing: -.028em;
+    line-height: 1.04;
+    margin: 0 auto 18px;
+    max-width: 880px;
   }
-  .hero-title em { color: var(--accent); font-style: italic; }
+  .hero-title em { color: var(--accent); font-style: italic; font-weight: 600; }
   .hero-sub {
-    font-size: 17px; color: var(--text-2);
-    max-width: 660px; line-height: 1.6; margin: 0;
+    font-size: 18px; color: var(--text-2);
+    max-width: 640px; line-height: 1.6;
+    margin: 0 auto;
+  }
+
+  /* credibility strip — small trust signals under hero */
+  .creds {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    max-width: 940px;
+    margin: 40px auto 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .cred {
+    padding: 18px 14px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+  .cred:last-child { border-right: 0; }
+  .cred-num {
+    display: block;
+    font-family: var(--serif);
+    font-size: 22px; font-weight: 600;
+    color: var(--accent);
+    letter-spacing: -.01em;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .cred-lbl {
+    display: block;
+    font-size: 11.5px;
+    color: var(--text-2);
+    line-height: 1.4;
   }
 
   /* capability pill */
@@ -120,10 +178,27 @@
     flex-shrink: 0;
   }
 
-  /* drop panes */
+  /* drop panes — with a small arrow divider between them on desktop */
   .panes {
     display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
     margin: 24px 0;
+    position: relative;
+  }
+  .panes::after {
+    content: '→';
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: grid; place-items: center;
+    font: 700 16px var(--sans);
+    color: var(--accent);
+    box-shadow: var(--shadow-sm);
+    pointer-events: none;
+    z-index: 2;
   }
   .drop {
     background: var(--surface);
@@ -143,6 +218,14 @@
   .drop-label {
     font-size: 11px; color: var(--text-3);
     text-transform: uppercase; letter-spacing: .09em; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .drop-label::before {
+    content: ''; width: 18px; height: 18px; border-radius: 4px;
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
+    display: inline-block;
+    background-image: linear-gradient(135deg, transparent 50%, color-mix(in srgb, var(--accent) 18%, transparent) 50%);
   }
   .drop .pick { color: var(--accent); cursor: pointer; font-size: 13px; font-weight: 500; }
   .drop .pick:hover { text-decoration: underline; }
@@ -283,14 +366,39 @@
   .info:hover .tip, .info:focus .tip { display: block; }
 
   footer.foot {
-    text-align: center;
-    padding: 56px 24px 40px;
-    color: var(--text-3); font-size: 12.5px;
+    margin-top: 80px;
     border-top: 1px solid var(--border);
-    margin-top: 64px;
+    background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--accent) 4%, var(--surface-2)) 100%);
+    padding: 56px 32px 40px;
+    color: var(--text-2);
   }
-  footer.foot a { color: var(--text-2); }
-  footer.foot .brand-line { font-family: var(--serif); font-size: 14px; color: var(--text-2); margin-bottom: 4px; }
+  footer.foot a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border-strong); }
+  footer.foot a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .foot-grid {
+    max-width: 1080px; margin: 0 auto;
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 48px; padding-bottom: 36px;
+  }
+  .foot-col h4 {
+    font: 700 11.5px var(--sans);
+    text-transform: uppercase; letter-spacing: .09em;
+    color: var(--text-3); margin: 0 0 12px;
+  }
+  .foot-col p {
+    margin: 0 0 10px;
+    font-size: 13.5px; color: var(--text-2); line-height: 1.6;
+  }
+  .foot-brand { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .foot-name { font: 600 22px/1 var(--serif); letter-spacing: -.015em; color: var(--text); }
+  .foot-tagline { font-size: 12px; color: var(--text-3); margin-top: 4px; }
+  .foot-blurb { font-size: 13.5px; color: var(--text-2); line-height: 1.6; margin: 0; max-width: 380px; }
+  .foot-bottom {
+    max-width: 1080px; margin: 0 auto;
+    padding-top: 24px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap;
+    font-size: 12.5px; color: var(--text-3);
+  }
+  .foot-bottom .right { font-family: var(--serif); }
 
   /* trust / privacy banner */
   .trust { margin: 28px 0 4px; }
@@ -337,10 +445,18 @@
   @media (max-width: 720px) {
     .shell { padding: 0 18px; }
     header { padding: 18px; flex-direction: column; align-items: flex-start; gap: 14px; }
-    .hero { padding: 36px 0 18px; }
-    .hero-title { font-size: 30px; }
+    .hero { padding: 44px 0 22px; }
+    .hero-title { font-size: 32px; }
     .hero-sub { font-size: 15px; }
+    .hero-eyebrow { font-size: 10.5px; padding: 5px 12px; }
+    .creds { grid-template-columns: repeat(2, 1fr); margin-top: 28px; }
+    .cred { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 14px 10px; }
+    .cred:nth-child(2n) { border-right: 0; }
+    .cred:nth-last-child(-n+2) { border-bottom: 0; }
+    .cred-num { font-size: 19px; }
+    .cred-lbl { font-size: 11px; }
     .panes { grid-template-columns: 1fr; gap: 14px; }
+    .panes::after { display: none; }
     .drop { min-height: 180px; }
     textarea { font-size: 16px; }       /* 16px stops iOS zoom on focus */
     input[type=text] { font-size: 16px; flex: 1 1 100%; min-width: 0; }
@@ -349,6 +465,9 @@
     .ctrl-actions button { flex: 1 1 140px; }
     .info .tip { width: auto; max-width: 88vw; }
     .verdict { font-size: 18px; padding: 14px 16px; }
+    .foot-grid { grid-template-columns: 1fr; gap: 32px; padding-bottom: 28px; }
+    footer.foot { padding: 44px 22px 32px; margin-top: 56px; }
+    .foot-bottom { flex-direction: column; align-items: flex-start; }
   }
   @media (max-width: 380px) {
     .brand-name { font-size: 20px; }
@@ -374,8 +493,15 @@
 
 <main class="shell">
   <section class="hero">
+    <span class="hero-eyebrow" data-i18n="hero_eyebrow"></span>
     <h1 class="hero-title" data-i18n="hero_title"></h1>
     <p class="hero-sub" data-i18n="tagline"></p>
+    <div class="creds">
+      <div class="cred"><span class="cred-num">100%</span><span class="cred-lbl" data-i18n="cred1_lbl"></span></div>
+      <div class="cred"><span class="cred-num">⚖</span><span class="cred-lbl" data-i18n="cred2_lbl"></span></div>
+      <div class="cred"><span class="cred-num">EN · TH</span><span class="cred-lbl" data-i18n="cred3_lbl"></span></div>
+      <div class="cred"><span class="cred-num">MIT</span><span class="cred-lbl" data-i18n="cred4_lbl"></span></div>
+    </div>
   </section>
 
   <section class="trust">
@@ -449,15 +575,49 @@
 </main>
 
 <footer class="foot">
-  <div class="brand-line">⚖ Klauz</div>
-  <div data-i18n="foot_line"></div>
+  <div class="foot-grid">
+    <div class="foot-col">
+      <div class="foot-brand">
+        <div class="brand-mark">⚖</div>
+        <div>
+          <div class="foot-name">Klauz</div>
+          <div class="foot-tagline" data-i18n="foot_brand_tagline"></div>
+        </div>
+      </div>
+      <p class="foot-blurb" data-i18n="foot_blurb"></p>
+    </div>
+    <div class="foot-col">
+      <h4 data-i18n="foot_h_priv"></h4>
+      <p data-i18n="foot_p_priv"></p>
+    </div>
+    <div class="foot-col">
+      <h4 data-i18n="foot_h_open"></h4>
+      <p><a href="https://github.com/patsa2561-art/Klauz" target="_blank" rel="noopener">github.com/patsa2561-art/Klauz</a></p>
+      <p data-i18n="foot_p_open"></p>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span data-i18n="foot_line"></span>
+    <span class="right">⚖ klauz.space</span>
+  </div>
 </footer>
 
 <script>
 const I18N = {
   en: {
+    hero_eyebrow: 'Contract Redline Intelligence',
     hero_title: 'Does your edit really change the <em>meaning</em>?',
     tagline: 'Drop the before & after of any contract — Klauz tells you what an edit <b>really changed</b> (the meaning, not just the words) and <b>who it favors</b>.',
+    cred1_lbl: 'recall on modal · negation · number flips',
+    cred2_lbl: 'signed receipts anyone can re-verify',
+    cred3_lbl: 'bilingual deterministic detectors',
+    cred4_lbl: 'open source on GitHub',
+    foot_brand_tagline: 'Contract redline intelligence',
+    foot_blurb: 'Catches meaning-changing edits in contracts that look innocent but flip obligations. Hosted demo above + a fully local desktop app.',
+    foot_h_priv: 'Privacy',
+    foot_p_priv: 'Documents are processed in memory and discarded immediately. We never store, log, or read file content — only you ever see what you compare.',
+    foot_h_open: 'Open source',
+    foot_p_open: 'MIT licensed. Deterministic detectors + optional local LLM (Ollama). No cloud AI, no API keys.',
     priv: '🔒 HTTPS · in-memory only · zero document storage',
     trust_title: 'Private by design — only you see your documents',
     trust_intro: 'Klauz processes your documents in memory only and discards them immediately. We do not store, log, or read the content of any file you upload. Nobody but you ever sees what you compare.',
@@ -536,8 +696,19 @@ const I18N = {
     lint_why: 'Like a spell-checker for contract structure — it flags broken references, unfilled blanks, leftover "TBD"s and duplicate/unused defined terms. Pure rules, no AI (so it never makes things up).  ✗ = should fix · ⚠ = worth a quick look.',
   },
   th: {
+    hero_eyebrow: 'ระบบวิเคราะห์การแก้สัญญา',
     hero_title: 'การแก้ของคุณ <em>เปลี่ยนความหมาย</em> จริงไหม?',
     tagline: 'วางสัญญา 2 ฉบับ (ก่อน–หลัง) — Klauz บอกว่าการแก้ <b>เปลี่ยนความหมายจริงไหม</b> (ไม่ใช่แค่คำ) และ <b>เอียงเข้าข้างใคร</b>',
+    cred1_lbl: 'แม่นยำบน modal · negation · จำนวน',
+    cred2_lbl: 'ใบเซ็นที่ตรวจซ้ำได้',
+    cred3_lbl: 'detector รองรับไทย+อังกฤษ',
+    cred4_lbl: 'โอเพนซอร์ส MIT',
+    foot_brand_tagline: 'ระบบวิเคราะห์การแก้สัญญา',
+    foot_blurb: 'จับการแก้สัญญาที่ดูปกติแต่พลิกภาระผูกพัน · โหมด hosted ด้านบน + แอปเดสก์ทอปทำงานในเครื่อง 100%',
+    foot_h_priv: 'ความเป็นส่วนตัว',
+    foot_p_priv: 'เอกสารประมวลผลในหน่วยความจำแล้วทิ้งทันที — เราไม่เก็บ ไม่บันทึก ไม่อ่านเนื้อหา มีแค่คุณเท่านั้นที่เห็นสิ่งที่คุณเปรียบเทียบ',
+    foot_h_open: 'โอเพนซอร์ส',
+    foot_p_open: 'MIT licensed · ใช้กฎ deterministic + LLM ในเครื่อง (Ollama) เป็นออปชัน ไม่ใช้ cloud AI ไม่ต้องมี API key',
     priv: '🔒 HTTPS · ในหน่วยความจำเท่านั้น · ไม่เก็บเอกสาร',
     trust_title: 'ออกแบบให้เป็นส่วนตัว — มีแค่คุณเท่านั้นที่เห็นเอกสาร',
     trust_intro: 'Klauz ประมวลผลเอกสารคุณในหน่วยความจำเท่านั้น แล้วทิ้งทันที — เราไม่เก็บ ไม่บันทึก ไม่อ่านเนื้อหาไฟล์ที่คุณอัปโหลด ไม่มีใครเห็นสิ่งที่คุณเปรียบเทียบนอกจากตัวคุณเอง',
