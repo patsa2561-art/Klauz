@@ -129,13 +129,17 @@
     <div class="brand-mark">⚖</div>
     <div class="brand-name">Klauz</div>
   </a>
-  <span class="journey-pill">JOURNEY</span>
+  <span class="journey-pill" data-i18n="journey_pill">JOURNEY</span>
   <span class="spacer"></span>
-  <a href="/">← back to Klauz</a>
+  <nav class="langtog" style="display:flex;gap:0;border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-right:8px">
+    <button id="lang-en" onclick="setLang('en')" style="background:transparent;color:var(--text-2);border:0;padding:6px 10px;font:600 11px var(--sans);border-radius:0;cursor:pointer">EN</button>
+    <button id="lang-th" onclick="setLang('th')" style="background:transparent;color:var(--text-2);border:0;padding:6px 10px;font:600 11px var(--sans);border-radius:0;cursor:pointer">ไทย</button>
+  </nav>
+  <a href="/" data-i18n="back_to_klauz">← back to Klauz</a>
 </header>
 <main class="shell">
-  <h1>Your Contract Review Notebook</h1>
-  <p class="sub" style="font-size:16px;color:var(--text);max-width:680px">
+  <h1 data-i18n="hero_h1">Your Contract Review Notebook</h1>
+  <p class="sub" style="font-size:16px;color:var(--text);max-width:680px" data-i18n="hero_p">
     <b>What this is, in 10 seconds:</b> every contract you review with Klauz is saved here,
     chain-signed with SHA-256, and kept inside your browser. You can prove later
     <i>"I reviewed this contract on date X and saw problems Y"</i> — and no one can fake or alter it.
@@ -144,24 +148,24 @@
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0 22px 0">
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
       <div style="font-size:22px;margin-bottom:4px">🕒</div>
-      <div style="font:600 13.5px var(--sans);margin-bottom:3px">When did I see this clause?</div>
-      <div style="color:var(--text-2);font-size:12.5px;line-height:1.5">Every review is timestamped. Browse back through any contract you've touched.</div>
+      <div style="font:600 13.5px var(--sans);margin-bottom:3px" data-i18n="card1_h">When did I see this clause?</div>
+      <div style="color:var(--text-2);font-size:12.5px;line-height:1.5" data-i18n="card1_p">Every review is timestamped. Browse back through any contract you've touched.</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
       <div style="font-size:22px;margin-bottom:4px">🔐</div>
-      <div style="font:600 13.5px var(--sans);margin-bottom:3px">Can someone fake it?</div>
-      <div style="color:var(--text-2);font-size:12.5px;line-height:1.5">No. Every entry is linked to the previous one with SHA-256. Any tampering breaks the chain — visibly.</div>
+      <div style="font:600 13.5px var(--sans);margin-bottom:3px" data-i18n="card2_h">Can someone fake it?</div>
+      <div style="color:var(--text-2);font-size:12.5px;line-height:1.5" data-i18n="card2_p">No. Every entry is linked to the previous one with SHA-256. Any tampering breaks the chain — visibly.</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
       <div style="font-size:22px;margin-bottom:4px">🏠</div>
-      <div style="font:600 13.5px var(--sans);margin-bottom:3px">Where's my data?</div>
-      <div style="color:var(--text-2);font-size:12.5px;line-height:1.5">Only in your browser's localStorage. Klauz the server cannot see it. Clearing browser data wipes it.</div>
+      <div style="font:600 13.5px var(--sans);margin-bottom:3px" data-i18n="card3_h">Where's my data?</div>
+      <div style="color:var(--text-2);font-size:12.5px;line-height:1.5" data-i18n="card3_p">Only in your browser's localStorage. Klauz the server cannot see it. Clearing browser data wipes it.</div>
     </div>
   </div>
 
   <div style="background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:24px;display:flex;gap:12px;align-items:flex-start">
     <span style="font-size:20px;line-height:1">💡</span>
-    <div style="font-size:13.5px;line-height:1.55">
+    <div style="font-size:13.5px;line-height:1.55" data-i18n="howto">
       <b>How to start:</b> go to <a href="/" style="color:var(--accent);font-weight:600">the main Klauz page</a>,
       paste a contract, click <b>Tripwire</b>, then click <b>Save to Journey</b>. Your first chain entry appears below.
       In court or negotiation, export the chain (one button) and anyone can verify it without trusting Klauz.
@@ -171,10 +175,16 @@
   <div class="stats" id="stats"></div>
 
   <div class="actions-row">
-    <button onclick="exportJourney()">⬇ Export JSON</button>
-    <button class="ghost" onclick="importJourney()">⬆ Import</button>
-    <input type="file" id="importFile" accept=".json" style="display:none" onchange="onImport(this)" />
-    <button class="danger" onclick="clearJourney()" style="margin-left:auto">Clear all</button>
+    <button onclick="exportJourney()" data-i18n="export_journey_btn">⬇ Export journey</button>
+    <button class="ghost" onclick="exportCombined()" data-i18n="export_all_btn">⬇ Export everything (journey + chain)</button>
+    <button class="ghost" onclick="importJourney()" data-i18n="import_btn">⬆ Import…</button>
+    <input type="file" id="importFile" accept=".json,application/json" style="display:none" onchange="onImport(this)" />
+    <button class="danger" onclick="clearJourney()" style="margin-left:auto" data-i18n="clear_all_btn">Clear all</button>
+  </div>
+  <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin:-6px 0 22px 0;font-size:12.5px;color:var(--text-2);line-height:1.55">
+    <b data-i18n="import_help_title">📥 What can I import?</b>
+    <span data-i18n="import_help_body"> Any file that Klauz itself exported: a journey JSON (from <i>Export journey</i>), a chain JSON (from <i>Export chain</i> inside the Verifiable Chain panel below), or a combined file (from <i>Export everything</i>). You can also import a single journey entry — Klauz will wrap it for you.</span>
+    <a href="#" onclick="downloadExample(event)" style="color:var(--accent);font-weight:600;margin-left:6px" data-i18n="import_help_example">⬇ Download example file</a>
   </div>
 
   <div class="section-h">Cross-reference · clauses you've seen before</div>
@@ -193,17 +203,17 @@
     </p>
     <div id="chainStatus" style="font:600 14px var(--sans);margin:10px 0"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-      <button onclick="verifyMyChain()">✓ Verify my chain</button>
-      <button class="ghost" onclick="exportMyChain()">⬇ Export chain (.json)</button>
-      <button class="ghost" onclick="copyLastLink()">📎 Copy last link (anchor)</button>
+      <button id="chainVerifyBtn" onclick="verifyMyChain()" data-i18n="verify_btn">✓ Verify my chain</button>
+      <button id="chainExportBtn" class="ghost" onclick="exportMyChain()" data-i18n="export_chain_btn">⬇ Export chain (.json)</button>
+      <button id="chainAnchorBtn" class="ghost" onclick="copyLastLink()" data-i18n="anchor_btn">📎 Copy last link (anchor)</button>
     </div>
     <details style="margin-top:14px;color:var(--text-2);font-size:12.5px">
-      <summary style="cursor:pointer">Why does this matter?</summary>
+      <summary style="cursor:pointer" data-i18n="why_matters">Why does this matter?</summary>
       <ul style="margin:8px 0 0 0;padding-left:18px;line-height:1.6">
-        <li><b>Tamper-evident:</b> any retroactive change to a past review breaks the chain at that point — caught instantly by re-verification.</li>
-        <li><b>Vendor-independent:</b> the same verifier runs in your browser, on the Klauz server (<code>POST /chain/verify</code>), and in any third-party Node script that imports <code>src/chain.js</code>.</li>
-        <li><b>Court-admissible:</b> export the JSON and the engine_hash trail proves you reviewed contract X on date Y with rule version Z — without anyone having to trust Klauz.</li>
-        <li><b>Anchor against total rewrite:</b> copy the latest link and post it somewhere external (email to self, a tweet, your own gist). Any future rewrite of the tail is detectable against the anchor.</li>
+        <li data-i18n="why_1"><b>Tamper-evident:</b> any retroactive change to a past review breaks the chain at that point — caught instantly by re-verification.</li>
+        <li data-i18n="why_2"><b>Vendor-independent:</b> the same verifier runs in your browser, on the Klauz server (<code>POST /chain/verify</code>), and in any third-party Node script that imports <code>src/chain.js</code>.</li>
+        <li data-i18n="why_3"><b>Court-admissible:</b> export the JSON and the engine_hash trail proves you reviewed contract X on date Y with rule version Z — without anyone having to trust Klauz.</li>
+        <li data-i18n="why_4"><b>Anchor against total rewrite:</b> copy the latest link and post it somewhere external (email to self, a tweet, your own gist). Any future rewrite of the tail is detectable against the anchor.</li>
       </ul>
     </details>
   </div>
@@ -215,6 +225,183 @@
 <script src="/chain.js"></script>
 <script>
 const KEY = 'klauz_journey_v1';
+const LANG_KEY = 'klauz_lang_v1';
+const CHAIN_VERSION = 'klauz-chain-v1';
+
+// ---------- i18n (mirrors index.html keys where it makes sense) ----------
+const I18N = {
+  en: {
+    journey_pill: 'JOURNEY',
+    back_to_klauz: '← back to Klauz',
+    hero_h1: 'Your Contract Review Notebook',
+    hero_p: '<b>What this is, in 10 seconds:</b> every contract you review with Klauz is saved here, chain-signed with SHA-256, and kept inside your browser. You can prove later <i>"I reviewed this contract on date X and saw problems Y"</i> — and no one can fake or alter it.',
+    card1_h: 'When did I see this clause?',
+    card1_p: "Every review is timestamped. Browse back through any contract you've touched.",
+    card2_h: 'Can someone fake it?',
+    card2_p: 'No. Every entry is linked to the previous one with SHA-256. Any tampering breaks the chain — visibly.',
+    card3_h: "Where's my data?",
+    card3_p: "Only in your browser's localStorage. Klauz the server cannot see it. Clearing browser data wipes it.",
+    howto: '<b>How to start:</b> go to <a href="/" style="color:var(--accent);font-weight:600">the main Klauz page</a>, paste a contract, click <b>Tripwire</b>, then click <b>Save to Journey</b>. Your first chain entry appears below. In court or negotiation, export the chain (one button) and anyone can verify it without trusting Klauz.',
+    export_journey_btn: '⬇ Export journey',
+    export_all_btn: '⬇ Export everything (journey + chain)',
+    import_btn: '⬆ Import…',
+    clear_all_btn: 'Clear all',
+    import_help_title: '📥 What can I import?',
+    import_help_body: ' Any file that Klauz itself exported: a journey JSON (from Export journey), a chain JSON (from Export chain), or a combined file (from Export everything). You can also import a single journey entry — Klauz will wrap it for you.',
+    import_help_example: '⬇ Download example file',
+    no_entries_h: 'No entries yet',
+    no_entries_p: 'Run a Tripwire or Certify on the <a href="/">main Klauz page</a> and click "💾 Save to Journey" — your history will appear here.',
+    no_entries_q: 'Everything stays in this browser. Klauz the server can\'t see it.',
+    stat_reviews: 'total reviews',
+    stat_findings: 'total findings',
+    stat_parties: 'unique parties',
+    stat_common: 'most common',
+    crossref_intro: 'Patterns that keep showing up in your contracts:',
+    crossref_empty: 'No recurring patterns yet — keep reviewing contracts to find what counterparts repeat.',
+    chain_empty: 'Chain is empty. Run a Tripwire scan from the main page and click "Save to Journey" — your first link will appear here.',
+    chain_verified: '✓ CHAIN VERIFIED',
+    chain_broken: '✗ CHAIN BROKEN',
+    chain_nothing_to_verify: '⛓ Chain is empty — nothing to verify yet. Save your first review from the main page.',
+    chain_no_tamper: 'No retroactive edits detected. SHA-256 chain is mathematically intact.',
+    chain_partial: 'Entries 0…',
+    chain_partial_2: 'are still cryptographically intact; everything after is untrusted.',
+    verify_btn: '✓ Verify my chain',
+    export_chain_btn: '⬇ Export chain (.json)',
+    anchor_btn: '📎 Copy last link (anchor)',
+    no_links_alert: 'No chain links yet. Save your first review from the main page.',
+    anchor_copied: 'Anchor copied. Post it somewhere external (email to yourself, a private gist) so any future tail rewrite becomes detectable.',
+    confirm_clear: 'Erase all entries AND the verifiable chain? This cannot be undone.',
+    import_dialog_title: 'Import results',
+    import_added: 'journey entries added',
+    import_chain_added: 'chain links added',
+    import_chain_replaced: 'chain replaced (previous chain was empty)',
+    import_nothing: 'No new entries (all duplicates or empty file).',
+    import_chain_kept: '⚠ Your existing chain was kept. Refusing to overwrite a non-empty chain. To replace it, click "Clear all" first.',
+    import_chain_invalid: '⚠ The chain inside the imported file failed verification (broken at entry %s, reason: %s). The chain was NOT imported.',
+    import_invalid_intro: 'Import failed:',
+    why_matters: 'Why does this matter?',
+    why_1: 'Tamper-evident: any retroactive change to a past review breaks the chain at that point — caught instantly by re-verification.',
+    why_2: 'Vendor-independent: the same verifier runs in your browser, on the Klauz server (POST /chain/verify), and in any third-party Node script that imports src/chain.js.',
+    why_3: 'Court-admissible: export the JSON and the engine_hash trail proves you reviewed contract X on date Y with rule version Z — without anyone having to trust Klauz.',
+    why_4: 'Anchor against total rewrite: copy the latest link and post it somewhere external (email to self, a tweet, your own gist). Any future rewrite of the tail is detectable against the anchor.',
+  },
+  th: {
+    journey_pill: 'บันทึก',
+    back_to_klauz: '← กลับ Klauz',
+    hero_h1: 'สมุดบันทึกการตรวจสัญญาของคุณ',
+    hero_p: '<b>เอาไว้ทำอะไร · 10 วินาที:</b> ทุกสัญญาที่คุณตรวจกับ Klauz จะถูกบันทึกไว้ที่นี่ ผูกด้วย SHA-256 chain เก็บในเบราว์เซอร์ของคุณ คุณพิสูจน์ได้ภายหลังว่า <i>"ฉันตรวจสัญญานี้วันที่ X เห็นปัญหา Y"</i> — ไม่มีใครปลอมหรือแก้ย้อนหลังได้',
+    card1_h: 'ฉันเห็นข้อนี้ตอนไหน?',
+    card1_p: 'รีวิวทุกครั้งมี timestamp ย้อนกลับไปดูสัญญาที่เคยตรวจได้',
+    card2_h: 'มีใครปลอมได้ไหม?',
+    card2_p: 'ไม่ได้ ทุก entry ถูก link กับ entry ก่อนหน้าด้วย SHA-256 ใครพยายามแก้ chain ขาดทันที — เห็นชัด',
+    card3_h: 'ข้อมูลฉันอยู่ที่ไหน?',
+    card3_p: 'อยู่ใน localStorage ของเบราว์เซอร์คุณคนเดียว เซิร์ฟเวอร์ Klauz มองไม่เห็น ล้างข้อมูลเบราว์เซอร์ = ลบหมด',
+    howto: '<b>เริ่มยังไง:</b> ไปที่ <a href="/" style="color:var(--accent);font-weight:600">หน้า Klauz หลัก</a> วางสัญญา กดปุ่ม <b>Tripwire</b> แล้วกด <b>Save to Journey</b> · chain entry แรกของคุณจะมาขึ้นด้านล่าง · ในศาลหรือเจรจา export chain (กดปุ่มเดียว) แล้วใครก็ verify ได้โดยไม่ต้องเชื่อ Klauz',
+    export_journey_btn: '⬇ ดาวน์โหลดบันทึก',
+    export_all_btn: '⬇ ดาวน์โหลดทั้งหมด (บันทึก + chain)',
+    import_btn: '⬆ นำเข้าไฟล์…',
+    clear_all_btn: 'ล้างทั้งหมด',
+    import_help_title: '📥 นำเข้าไฟล์แบบไหนได้บ้าง?',
+    import_help_body: ' ไฟล์ที่ Klauz เคย Export ออกมา: ไฟล์บันทึก (จาก "ดาวน์โหลดบันทึก"), ไฟล์ chain (จาก "Export chain" ในแผง Verifiable Chain ด้านล่าง), หรือไฟล์รวม (จาก "ดาวน์โหลดทั้งหมด") · นำเข้าทีละ entry ก็ได้ Klauz จะห่อให้เอง',
+    import_help_example: '⬇ โหลดไฟล์ตัวอย่าง',
+    no_entries_h: 'ยังไม่มีรายการ',
+    no_entries_p: 'ไปที่ <a href="/">หน้า Klauz หลัก</a> วางสัญญา กดปุ่ม Tripwire แล้วกด "💾 Save to Journey" — รายการจะมาขึ้นที่นี่',
+    no_entries_q: 'ทุกอย่างเก็บในเบราว์เซอร์ของคุณคนเดียว เซิร์ฟเวอร์ Klauz ไม่เห็น',
+    stat_reviews: 'รีวิวรวม',
+    stat_findings: 'ปัญหารวม',
+    stat_parties: 'คู่สัญญาที่เคยเจอ',
+    stat_common: 'พบบ่อย',
+    crossref_intro: 'ข้อสัญญาที่ขึ้นซ้ำในประวัติของคุณ:',
+    crossref_empty: 'ยังไม่มีรายการซ้ำ — รีวิวต่อไปเรื่อยๆ จะเห็นว่าฝั่งตรงข้ามชอบใช้ข้อแบบไหนซ้ำๆ',
+    chain_empty: 'Chain ยังว่าง · ไปที่หน้าหลัก กด Tripwire แล้ว Save to Journey — link แรกจะขึ้นที่นี่',
+    chain_verified: '✓ CHAIN ผ่านการตรวจสอบ',
+    chain_broken: '✗ CHAIN ขาด',
+    chain_nothing_to_verify: '⛓ Chain ว่าง — ยังไม่มีอะไรให้ตรวจ ไปบันทึกรีวิวแรกจากหน้าหลักก่อน',
+    chain_no_tamper: 'ไม่พบการแก้ย้อนหลัง SHA-256 chain สมบูรณ์ทางคณิตศาสตร์',
+    chain_partial: 'รายการที่ 0…',
+    chain_partial_2: 'ยังสมบูรณ์ ส่วนหลังจากนั้นถือว่าเชื่อไม่ได้',
+    verify_btn: '✓ ตรวจสอบ chain',
+    export_chain_btn: '⬇ ดาวน์โหลด chain (.json)',
+    anchor_btn: '📎 คัดลอก link ล่าสุด (anchor)',
+    no_links_alert: 'ยังไม่มี chain link · ไปบันทึกรีวิวแรกจากหน้าหลักก่อน',
+    anchor_copied: 'คัดลอกแล้ว · เอาไปโพสต์ที่ภายนอก (email หาตัวเอง, private gist) เผื่อมีคนพยายามเขียน chain ใหม่ เราจะตรวจได้',
+    confirm_clear: 'ลบ entry ทั้งหมดและ verifiable chain ด้วย? เลิกทำไม่ได้',
+    import_dialog_title: 'ผลการนำเข้า',
+    import_added: 'entry บันทึกที่เพิ่ม',
+    import_chain_added: 'chain link ที่เพิ่ม',
+    import_chain_replaced: 'chain ถูกเขียนทับ (chain เก่าว่าง)',
+    import_nothing: 'ไม่มี entry ใหม่ (ซ้ำหมด หรือไฟล์ว่าง)',
+    import_chain_kept: '⚠ chain เก่าของคุณยังอยู่ — Klauz ไม่ยอมเขียนทับ chain ที่ไม่ว่าง ถ้าต้องการแทนที่จริงๆ กด "ล้างทั้งหมด" ก่อน',
+    import_chain_invalid: '⚠ chain ในไฟล์ที่นำเข้าไม่ผ่านการตรวจสอบ (ขาดที่ entry %s, สาเหตุ: %s) chain นี้ไม่ถูกนำเข้า',
+    import_invalid_intro: 'นำเข้าไม่สำเร็จ:',
+    why_matters: 'ทำไมเรื่องนี้สำคัญ?',
+    why_1: 'ตรวจการแก้ย้อนหลังได้: ถ้ามีใครแก้ entry ในอดีต chain จะขาดที่จุดนั้นทันที — เห็นทุกครั้งที่ verify',
+    why_2: 'ไม่ต้องเชื่อ vendor: ตัว verifier เดียวกันรันได้ทั้งในเบราว์เซอร์, บนเซิร์ฟเวอร์ Klauz (POST /chain/verify), หรือใน Node script ใดๆ ที่ import src/chain.js',
+    why_3: 'ใช้ในศาลได้: export JSON ออกมา + engine_hash trail พิสูจน์ได้ว่าคุณตรวจสัญญา X วันที่ Y ด้วยกฎเวอร์ชัน Z — โดยไม่ต้องมีใครเชื่อ Klauz',
+    why_4: 'ยึดกัน rewrite ทั้งหาง: copy link ล่าสุดไปโพสต์ภายนอก (email หาตัวเอง, tweet, gist) ถ้ามีใคร rewrite ตอนท้ายของ chain เราตรวจได้กับ anchor นั้น',
+  },
+};
+let LANG = (() => {
+  try { return localStorage.getItem(LANG_KEY) || (navigator.language || '').startsWith('th') ? 'th' : 'en'; } catch { return 'en'; }
+})();
+if (LANG !== 'en' && LANG !== 'th') LANG = 'en';
+function t(k, ...args) {
+  let s = (I18N[LANG] && I18N[LANG][k]) || I18N.en[k] || k;
+  for (const a of args) s = s.replace('%s', a);
+  return s;
+}
+function setLang(l) {
+  LANG = l;
+  try { localStorage.setItem(LANG_KEY, l); } catch {}
+  applyI18n();
+  render(); renderChainStatus();
+}
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (k && I18N[LANG][k] !== undefined) {
+      // If the element only has text or a span we replace innerHTML; otherwise textContent.
+      el.innerHTML = I18N[LANG][k];
+    }
+  });
+  document.getElementById('lang-en').style.color = LANG === 'en' ? 'var(--accent)' : 'var(--text-2)';
+  document.getElementById('lang-th').style.color = LANG === 'th' ? 'var(--accent)' : 'var(--text-2)';
+  document.documentElement.lang = LANG;
+}
+
+// ---------- Smart import format detector (browser twin of src/journey-import.js) ----------
+// Keep in sync with src/journey-import.js — test suite pins the contract.
+function isJourneyEntry(e) {
+  if (!e || typeof e !== 'object' || Array.isArray(e)) return false;
+  if (!e.id && !e.ts) return false;
+  return ('type' in e) || ('kind' in e) || ('summary' in e) || ('title' in e) || ('chain_link' in e);
+}
+function looksLikeChain(c) {
+  return c && typeof c === 'object' && c.version === CHAIN_VERSION && Array.isArray(c.chain);
+}
+function detectFormat(parsed) {
+  if (parsed == null) return { kind: 'invalid', journey: null, chain: null, reason: 'empty_or_null' };
+  if (Array.isArray(parsed)) {
+    if (parsed.length === 0) return { kind: 'journey', journey: [], chain: null };
+    if (parsed.every(isJourneyEntry)) return { kind: 'journey', journey: parsed, chain: null };
+    return { kind: 'invalid', journey: null, chain: null, reason: 'array_contains_non_entries' };
+  }
+  if (typeof parsed !== 'object') return { kind: 'invalid', journey: null, chain: null, reason: 'not_object_or_array' };
+  if (looksLikeChain(parsed)) return { kind: 'chain', journey: null, chain: parsed };
+  const hasJ = Array.isArray(parsed.journey);
+  const hasC = looksLikeChain(parsed.chain);
+  if (hasJ && hasC) return { kind: 'combined', journey: parsed.journey, chain: parsed.chain };
+  if (hasJ)        return { kind: 'journey',  journey: parsed.journey, chain: null };
+  if (hasC)        return { kind: 'chain',    journey: null,           chain: parsed.chain };
+  if (isJourneyEntry(parsed)) return { kind: 'journey', journey: [parsed], chain: null };
+  return { kind: 'invalid', journey: null, chain: null, reason: 'unrecognized_klauz_format' };
+}
+const REASON_TXT = {
+  empty_or_null:               { en: 'The file was empty.',                                                       th: 'ไฟล์ว่าง' },
+  not_object_or_array:         { en: 'The file is JSON but not in any shape Klauz recognizes.',                   th: 'JSON ใช่ แต่ไม่ใช่รูปแบบ Klauz' },
+  array_contains_non_entries:  { en: 'The file is an array but the items inside are not Klauz journey entries.',  th: 'เป็น array แต่ของข้างในไม่ใช่ entry ของ Klauz' },
+  unrecognized_klauz_format:   { en: 'Not a Klauz file. Did you mean to upload a contract to the main page?',     th: 'ไม่ใช่ไฟล์ Klauz — อยากอัปโหลดสัญญาไปหน้าแรกแทนหรือเปล่า?' },
+};
 
 function load() {
   try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; }
@@ -234,12 +421,12 @@ function render() {
   if (entries.length === 0) {
     document.getElementById('stats').innerHTML = '';
     document.getElementById('crossref').innerHTML = '';
-    document.getElementById('timeline').innerHTML = `
-      <div class="empty">
-        <h2>No entries yet</h2>
-        <p>Run a Certify or Tripwire on <a href="/">Klauz</a> and click "💾 Save to Journey" — your history will appear here.</p>
-        <p style="font-size:12px;color:var(--text-3)">Everything stays in this browser. Klauz the server can't see it.</p>
-      </div>`;
+    document.getElementById('timeline').innerHTML =
+      '<div class="empty">' +
+        '<h2>' + t('no_entries_h') + '</h2>' +
+        '<p>' + t('no_entries_p') + '</p>' +
+        '<p style="font-size:12px;color:var(--text-3)">' + t('no_entries_q') + '</p>' +
+      '</div>';
     return;
   }
 
@@ -259,24 +446,24 @@ function render() {
   }
   const topCat = Object.entries(catCount).sort((a,b)=>b[1]-a[1])[0];
 
-  document.getElementById('stats').innerHTML = `
-    <div class="stat"><div class="label">total reviews</div><div class="num">${entries.length}</div></div>
-    <div class="stat"><div class="label">total findings</div><div class="num">${totalFindings}</div></div>
-    <div class="stat"><div class="label">unique parties</div><div class="num">${uniqueParties.size}</div></div>
-    <div class="stat small"><div class="label">most common</div><div class="num">${esc(topCat ? topCat[0] : '—')}</div></div>`;
+  document.getElementById('stats').innerHTML =
+    '<div class="stat"><div class="label">' + t('stat_reviews')  + '</div><div class="num">' + entries.length + '</div></div>' +
+    '<div class="stat"><div class="label">' + t('stat_findings') + '</div><div class="num">' + totalFindings    + '</div></div>' +
+    '<div class="stat"><div class="label">' + t('stat_parties')  + '</div><div class="num">' + uniqueParties.size + '</div></div>' +
+    '<div class="stat small"><div class="label">' + t('stat_common') + '</div><div class="num">' + esc(topCat ? topCat[0] : '—') + '</div></div>';
 
   // cross-reference — clauses appearing in 2+ entries
   const recurring = Object.entries(labelCount).filter(([,n]) => n >= 2).sort((a,b)=>b[1]-a[1]);
   if (recurring.length) {
     let crh = '<div class="crossref">';
-    crh += '<div style="font-size:13px;color:var(--text-2);margin-bottom:10px">Patterns that keep showing up in your contracts:</div>';
+    crh += '<div style="font-size:13px;color:var(--text-2);margin-bottom:10px">' + t('crossref_intro') + '</div>';
     for (const [lbl, n] of recurring.slice(0, 15)) {
-      crh += `<div class="crossref-item"><span>${esc(lbl)}</span><span class="ct">×${n}</span></div>`;
+      crh += '<div class="crossref-item"><span>' + esc(lbl) + '</span><span class="ct">×' + n + '</span></div>';
     }
     crh += '</div>';
     document.getElementById('crossref').innerHTML = crh;
   } else {
-    document.getElementById('crossref').innerHTML = '<div class="muted" style="color:var(--text-3);font-size:13px;padding:8px 0">No recurring patterns yet — keep reviewing contracts to find what counterparts repeat.</div>';
+    document.getElementById('crossref').innerHTML = '<div class="muted" style="color:var(--text-3);font-size:13px;padding:8px 0">' + t('crossref_empty') + '</div>';
   }
 
   // timeline
@@ -297,45 +484,126 @@ function render() {
 }
 
 function clearJourney() {
-  if (!confirm('Erase all entries? This cannot be undone.')) return;
+  if (!confirm(t('confirm_clear'))) return;
   localStorage.removeItem(KEY);
-  render();
+  if (window.KlauzChain) window.KlauzChain.resetChain();
+  render(); renderChainStatus();
 }
 
 function exportJourney() {
   const entries = load();
-  const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
+  downloadJSON(entries, 'klauz-journey-' + new Date().toISOString().slice(0,10) + '.json');
+}
+
+async function exportCombined() {
+  const entries = load();
+  let chain = { version: CHAIN_VERSION, chain: [] };
+  if (window.KlauzChain) chain = await window.KlauzChain.loadChain();
+  const payload = {
+    _note: 'Klauz combined export — journey entries + verifiable chain. Import this back into any Klauz instance to restore.',
+    exported_at: new Date().toISOString(),
+    journey: entries,
+    chain,
+  };
+  downloadJSON(payload, 'klauz-everything-' + new Date().toISOString().slice(0,10) + '.json');
+}
+
+function downloadJSON(obj, filename) {
+  const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'klauz-journey-' + new Date().toISOString().slice(0,10) + '.json';
+  a.download = filename;
   a.click();
-  URL.revokeObjectURL(a.href);
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+function downloadExample(ev) {
+  if (ev) ev.preventDefault();
+  const ex = {
+    _note: 'Example Klauz import file — combined journey + chain. Generated for documentation. Safe to import.',
+    journey: [{
+      id: 'k_example_001',
+      ts: '2026-06-29T10:00:00.000Z',
+      type: 'tripwire',
+      title: 'Tripwire scan (example)',
+      summary: {
+        persona: 'consumer',
+        parties: ['Acme Co.', 'You'],
+        findings: [{ id: 'auto_renewal', label: 'Auto-renewal', category: 'lockin', risk: 'high' }],
+        high_risk: 1, medium_risk: 0, total: 1,
+      },
+    }],
+    chain: { version: CHAIN_VERSION, chain: [] },
+  };
+  downloadJSON(ex, 'klauz-import-example.json');
 }
 
 function importJourney() { document.getElementById('importFile').click(); }
-function onImport(input) {
-  const f = input.files && input.files[0]; if (!f) return;
-  const r = new FileReader();
-  r.onload = () => {
-    try {
-      const imported = JSON.parse(r.result);
-      if (!Array.isArray(imported)) throw new Error('not an array');
-      const existing = load();
-      // dedupe by id (keep newest)
-      const seen = new Set(existing.map(e => e.id));
-      let added = 0;
-      for (const e of imported) {
-        if (!e.id || !seen.has(e.id)) { existing.push(e); seen.add(e.id); added++; }
-      }
-      save(existing);
-      render();
-      alert(`Imported ${added} new entries.`);
-    } catch (e) {
-      alert('Import failed: ' + e.message);
+
+async function onImport(input) {
+  const f = input.files && input.files[0];
+  if (!f) return;
+
+  let text;
+  try { text = await f.text(); }
+  catch (e) { alert(t('import_invalid_intro') + ' ' + (e.message || 'read error')); input.value = ''; return; }
+
+  let parsed;
+  try { parsed = JSON.parse(text); }
+  catch (e) {
+    alert(t('import_invalid_intro') + '\n\n' + (LANG === 'th'
+      ? 'ไฟล์นี้ไม่ใช่ JSON ที่ถูกต้อง ลองเปิดด้วย editor ดูว่ามี syntax error หรือเปล่า'
+      : 'The file is not valid JSON. Open it in a text editor to look for syntax errors.'));
+    input.value = ''; return;
+  }
+
+  const det = detectFormat(parsed);
+  if (det.kind === 'invalid') {
+    const r = REASON_TXT[det.reason] || REASON_TXT.unrecognized_klauz_format;
+    alert(t('import_invalid_intro') + '\n\n' + (LANG === 'th' ? r.th : r.en) +
+      '\n\n' + (LANG === 'th'
+        ? 'กดลิงก์ "โหลดไฟล์ตัวอย่าง" เพื่อดูว่าโครงสร้างที่ Klauz รับเข้าหน้าตาเป็นอย่างไร'
+        : 'Click "Download example file" to see what shape Klauz accepts.'));
+    input.value = ''; return;
+  }
+
+  // Process journey side
+  let jAdded = 0;
+  if (det.journey && det.journey.length) {
+    const existing = load();
+    const seen = new Set(existing.map(e => e.id));
+    for (const e of det.journey) {
+      if (!e.id) e.id = 'k_imp_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+      if (!seen.has(e.id)) { existing.push(e); seen.add(e.id); jAdded++; }
     }
-  };
-  r.readAsText(f);
+    save(existing);
+  }
+
+  // Process chain side (verify first; refuse on broken; refuse to overwrite non-empty)
+  let chainMsg = '';
+  if (det.chain && window.KlauzChain) {
+    const vr = await window.KlauzChain.verifyChain(det.chain);
+    if (!vr.ok) {
+      chainMsg = '\n' + t('import_chain_invalid', String(vr.brokenAt ?? '?'), vr.reason || '?');
+    } else {
+      const my = await window.KlauzChain.loadChain();
+      if (my.chain.length === 0) {
+        window.KlauzChain.saveChain(det.chain);
+        chainMsg = '\n✓ ' + det.chain.chain.length + ' ' + t('import_chain_added') + ' (' + t('import_chain_replaced') + ')';
+      } else {
+        chainMsg = '\n' + t('import_chain_kept');
+      }
+    }
+  }
+
+  render(); renderChainStatus();
   input.value = '';
+
+  const lines = [t('import_dialog_title') + ':', ''];
+  if (jAdded) lines.push('✓ ' + jAdded + ' ' + t('import_added'));
+  if (chainMsg) lines.push(chainMsg.trim());
+  if (!jAdded && !chainMsg) lines.push(t('import_nothing'));
+  alert(lines.join('\n'));
 }
 
 // ---------- Verifiable chain integration ----------
@@ -368,14 +636,21 @@ async function renderChainStatus() {
   const el = document.getElementById('chainStatus');
   if (!el || !window.KlauzChain) return;
   const c = await window.KlauzChain.loadChain();
+  // also flip empty-state button styling: dim Verify / Export-chain / Anchor when nothing to verify
+  const dim = !c.chain.length;
+  for (const id of ['chainVerifyBtn','chainExportBtn','chainAnchorBtn']) {
+    const b = document.getElementById(id);
+    if (b) { b.disabled = dim; b.style.opacity = dim ? '0.5' : ''; b.style.cursor = dim ? 'not-allowed' : 'pointer'; }
+  }
   if (!c.chain.length) {
-    el.innerHTML = '<span style="color:var(--text-3)">Chain is empty. Run a Tripwire scan from the main page and click "Save to Journey" — your first link will appear here.</span>';
+    el.innerHTML = '<span style="color:var(--text-3)">' + t('chain_empty') + '</span>';
     return;
   }
   const last = c.chain[c.chain.length - 1];
   el.innerHTML =
-    '<span style="color:var(--ok)">⛓ ' + c.chain.length + ' linked entries</span>' +
-    ' · last link: <code style="font-size:11px;background:var(--surface-2);padding:2px 6px;border-radius:3px">' +
+    '<span style="color:var(--ok)">⛓ ' + c.chain.length + (LANG === 'th' ? ' รายการที่เชื่อมโยง' : ' linked entries') + '</span>' +
+    ' · ' + (LANG === 'th' ? 'link ล่าสุด:' : 'last link:') +
+    ' <code style="font-size:11px;background:var(--surface-2);padding:2px 6px;border-radius:3px">' +
     last.link.slice(0, 16) + '…' + last.link.slice(-8) + '</code>' +
     ' · ' + new Date(last.ts).toLocaleString();
 }
@@ -383,38 +658,43 @@ async function renderChainStatus() {
 async function verifyMyChain() {
   if (!window.KlauzChain) { alert('Chain library not loaded'); return; }
   const c = await window.KlauzChain.loadChain();
-  const r = await window.KlauzChain.verifyChain(c);
   const el = document.getElementById('chainStatus');
+  if (!c.chain.length) {
+    el.innerHTML = '<span style="color:var(--warn);font-weight:700">' + t('chain_nothing_to_verify') + '</span>';
+    return;
+  }
+  const r = await window.KlauzChain.verifyChain(c);
   if (r.ok) {
     el.innerHTML =
-      '<span style="color:var(--ok);font-weight:700">✓ CHAIN VERIFIED</span> · ' +
-      r.length + ' entries · last link <code style="font-size:11px;background:var(--ok-soft);padding:2px 6px;border-radius:3px;color:var(--ok)">' +
-      r.lastLink.slice(0, 16) + '…</code><br><span style="color:var(--text-2);font-size:12.5px">No retroactive edits detected. SHA-256 chain is mathematically intact.</span>';
+      '<span style="color:var(--ok);font-weight:700">' + t('chain_verified') + '</span> · ' +
+      r.length + (LANG === 'th' ? ' รายการ · link ล่าสุด ' : ' entries · last link ') +
+      '<code style="font-size:11px;background:var(--ok-soft);padding:2px 6px;border-radius:3px;color:var(--ok)">' +
+      r.lastLink.slice(0, 16) + '…</code><br><span style="color:var(--text-2);font-size:12.5px">' + t('chain_no_tamper') + '</span>';
   } else {
     el.innerHTML =
-      '<span style="color:var(--danger);font-weight:700">✗ CHAIN BROKEN</span> · entry [' + (r.brokenAt ?? '?') +
-      '] · reason: <code>' + (r.reason || '?') + '</code><br><span style="color:var(--text-2);font-size:12.5px">Entries 0…' +
-      (r.lastValidIndex ?? -1) + ' are still cryptographically intact; everything after is untrusted.</span>';
+      '<span style="color:var(--danger);font-weight:700">' + t('chain_broken') + '</span>' +
+      (LANG === 'th' ? ' · รายการที่ [' : ' · entry [') + (r.brokenAt ?? '?') +
+      '] · ' + (LANG === 'th' ? 'สาเหตุ' : 'reason') + ': <code>' + (r.reason || '?') +
+      '</code><br><span style="color:var(--text-2);font-size:12.5px">' +
+      t('chain_partial') + (r.lastValidIndex ?? -1) + ' ' + t('chain_partial_2') + '</span>';
   }
 }
 
 async function exportMyChain() {
   if (!window.KlauzChain) return;
+  const c = await window.KlauzChain.loadChain();
+  if (!c.chain.length) { alert(t('no_links_alert')); return; }
   window.KlauzChain.exportChain();
 }
 
 async function copyLastLink() {
   if (!window.KlauzChain) return;
   const c = await window.KlauzChain.loadChain();
-  if (!c.chain.length) { alert('No links yet.'); return; }
+  if (!c.chain.length) { alert(t('no_links_alert')); return; }
   const last = c.chain[c.chain.length - 1];
   const anchor = 'klauz-chain anchor · ' + last.link + ' · entries=' + c.chain.length + ' · ts=' + last.ts;
-  try {
-    await navigator.clipboard.writeText(anchor);
-    alert('Anchor copied. Post it somewhere external (email to yourself, a private gist) so any future tail rewrite becomes detectable.');
-  } catch (e) {
-    prompt('Copy this anchor and store it externally:', anchor);
-  }
+  try { await navigator.clipboard.writeText(anchor); alert(t('anchor_copied')); }
+  catch { prompt(t('anchor_copied'), anchor); }
 }
 
 // Expose a global so the main Klauz page can write entries here
@@ -431,8 +711,12 @@ window.klauzSaveToJourney = async function(entry) {
   return true;
 };
 
+applyI18n();
 render();
 renderChainStatus();
+
+// Light keyboard shortcut: Esc closes any open alerts (browser-native already), but we
+// also wire Enter on the file picker for accessibility — nothing to do explicitly.
 </script>
 </body>
 </html>
