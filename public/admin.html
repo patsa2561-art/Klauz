@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Klauz · Admin</title>
+<meta name="robots" content="noindex,nofollow" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23b8451f'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='40' fill='white'%3E%E2%9A%96%3C/text%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg: #faf8f5; --surface: #ffffff; --surface-2: #f5f3ef; --border: #ebe5dc;
+    --text: #1c1815; --text-2: #5f574e; --text-3: #a39a8d;
+    --accent: #b8451f; --accent-hover: #963a1b;
+    --ok: #2f7d4c; --warn: #a16207; --danger: #a8351b;
+    --serif: 'Iowan Old Style', 'Hoefler Text', Georgia, 'Charter', 'Noto Serif Thai', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Noto Sans Thai', system-ui, sans-serif;
+    --mono: ui-monospace, 'JetBrains Mono', 'SF Mono', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.5 var(--sans); -webkit-font-smoothing: antialiased; }
+  header {
+    padding: 20px 32px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 14px; background: var(--bg);
+  }
+  .brand-mark {
+    width: 38px; height: 38px; border-radius: 11px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    color: white; display: grid; place-items: center; font-size: 19px;
+    box-shadow: 0 6px 18px rgb(184 69 31 / .22);
+  }
+  .brand-name { font: 600 22px/1 var(--serif); }
+  .admin-pill {
+    background: var(--text); color: var(--surface);
+    font: 700 10px/1 var(--sans); padding: 5px 9px; border-radius: 4px;
+    letter-spacing: .1em; margin-left: 4px;
+  }
+  .spacer { flex: 1; }
+  .who { font-size: 12px; color: var(--text-2); }
+  .shell { max-width: 1280px; margin: 0 auto; padding: 36px 32px 80px; }
+  h1 { font: 600 30px/1.1 var(--serif); margin: 0 0 6px; letter-spacing: -.02em; }
+  .sub { color: var(--text-2); margin: 0 0 26px; font-size: 14px; max-width: 720px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-bottom: 28px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; box-shadow: 0 1px 2px rgb(28 24 21 / .04); }
+  .stat .label { font-size: 11px; color: var(--text-2); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+  .stat .num { font: 600 28px var(--serif); margin-top: 6px; color: var(--accent); line-height: 1.1; }
+  .stat.small .num { font-size: 20px; }
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: 0 1px 2px rgb(28 24 21 / .04); }
+  .table-inner { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 720px; }
+  th, td { padding: 11px 16px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  thead th {
+    background: var(--surface-2);
+    font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--text-2); font-weight: 700;
+    position: sticky; top: 0;
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: var(--surface-2); }
+  .ip { font-family: var(--mono); font-size: 12.5px; color: var(--text); }
+  .path { font-family: var(--mono); font-size: 12px; color: var(--text-2); }
+  .ua { color: var(--text-3); font-size: 11.5px; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .flag { font-size: 18px; margin-right: 6px; vertical-align: -1px; }
+  .method {
+    display: inline-block; padding: 2px 7px; border-radius: 4px;
+    font: 700 10.5px var(--mono); letter-spacing: .03em;
+  }
+  .method.GET { background: color-mix(in srgb, var(--ok) 12%, white); color: var(--ok); }
+  .method.POST { background: color-mix(in srgb, var(--accent) 12%, white); color: var(--accent); }
+  .pager { display: flex; gap: 12px; align-items: center; justify-content: center; padding: 22px 0 0; flex-wrap: wrap; }
+  .pager button {
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 9px 16px; font: 600 13px var(--sans); cursor: pointer;
+    transition: background .12s, transform .12s;
+  }
+  .pager button:hover:not(:disabled) { background: var(--surface-2); transform: translateY(-1px); }
+  .pager button:disabled { opacity: .35; cursor: default; }
+  .pager .info { color: var(--text-2); font-size: 13px; padding: 0 8px; }
+  select {
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 10px; font: 13px var(--sans); cursor: pointer;
+  }
+  .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+  .empty { text-align: center; color: var(--text-3); padding: 40px 24px; font-style: italic; }
+  .refresh-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--ok);
+    display: inline-block; vertical-align: 1px; margin-right: 6px;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 18%, transparent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+  @media (max-width: 720px) {
+    header { padding: 16px 18px; }
+    .shell { padding: 24px 18px 60px; }
+    h1 { font-size: 24px; }
+    th, td { padding: 9px 10px; font-size: 12.5px; }
+    .ua { display: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand-mark">⚖</div>
+  <div class="brand-name">Klauz</div>
+  <span class="admin-pill">ADMIN</span>
+  <span class="spacer"></span>
+  <span class="who"><span class="refresh-dot"></span>auto-refresh every 15s</span>
+</header>
+<main class="shell">
+  <h1>Visitors</h1>
+  <p class="sub">IPs reaching this server, newest first. Country is populated automatically when traffic comes through Cloudflare proxy (otherwise blank).</p>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="toolbar">
+    <label style="font-size:13px;color:var(--text-2)">rows per page:
+      <select id="per" style="margin-left:6px">
+        <option>10</option>
+        <option selected>20</option>
+        <option>50</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="table-wrap">
+    <div class="table-inner">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:160px">Time (UTC)</th>
+            <th style="width:140px">IP</th>
+            <th style="width:120px">Country</th>
+            <th style="width:80px">Method</th>
+            <th>Path</th>
+            <th>User-Agent</th>
+          </tr>
+        </thead>
+        <tbody id="rows"><tr><td class="empty" colspan="6">loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="pager">
+    <button id="first">« First</button>
+    <button id="prev">‹ Prev</button>
+    <span class="info" id="pageInfo">—</span>
+    <button id="next">Next ›</button>
+    <button id="last">Last »</button>
+  </div>
+</main>
+<script>
+let PAGE = 1, PER = 20;
+
+function flag(cc) {
+  if (!cc || cc.length !== 2) return '';
+  return [...cc.toUpperCase()].map(c => String.fromCodePoint(127397 + c.charCodeAt(0))).join('');
+}
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function fmtTime(iso) {
+  try { return new Date(iso).toISOString().replace('T', ' ').slice(0, 19); }
+  catch { return iso; }
+}
+
+async function load() {
+  try {
+    const r = await fetch('/admin007/data?page=' + PAGE + '&per=' + PER, { credentials: 'same-origin' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    PAGE = j.page; PER = j.perPage;
+
+    document.getElementById('rows').innerHTML = j.rows.length
+      ? j.rows.map(x => `<tr>
+          <td>${esc(fmtTime(x.t))}</td>
+          <td class="ip">${esc(x.ip) || '—'}</td>
+          <td>${x.country ? '<span class="flag">' + flag(x.country) + '</span>' + esc(x.country) : '<span style="color:var(--text-3)">—</span>'}</td>
+          <td><span class="method ${esc(x.method)}">${esc(x.method)}</span></td>
+          <td class="path">${esc(x.path)}</td>
+          <td class="ua" title="${esc(x.ua)}">${esc(x.ua) || '—'}</td>
+        </tr>`).join('')
+      : '<tr><td class="empty" colspan="6">no visits yet — share http://143.198.204.73:7700 or your domain to start collecting traffic.</td></tr>';
+
+    document.getElementById('pageInfo').textContent = `page ${j.page} of ${j.totalPages} · ${j.total} total visits`;
+    document.getElementById('first').disabled = j.page <= 1;
+    document.getElementById('prev').disabled = j.page <= 1;
+    document.getElementById('next').disabled = j.page >= j.totalPages;
+    document.getElementById('last').disabled = j.page >= j.totalPages;
+
+    document.getElementById('stats').innerHTML = `
+      <div class="stat"><div class="label">total visits</div><div class="num">${j.total}</div></div>
+      <div class="stat"><div class="label">unique IPs</div><div class="num">${j.stats.uniqueIps}</div></div>
+      <div class="stat"><div class="label">last 24 hours</div><div class="num">${j.stats.last24h}</div></div>
+      <div class="stat small"><div class="label">top country</div><div class="num">${esc(j.stats.topCountry)}</div></div>`;
+  } catch (e) {
+    document.getElementById('rows').innerHTML = `<tr><td class="empty" colspan="6" style="color:var(--danger)">error: ${esc(e.message)}</td></tr>`;
+  }
+}
+
+document.getElementById('first').onclick = () => { PAGE = 1; load(); };
+document.getElementById('prev').onclick  = () => { PAGE--; load(); };
+document.getElementById('next').onclick  = () => { PAGE++; load(); };
+document.getElementById('last').onclick  = () => { PAGE = 1e9; load(); }; // clamped server-side
+document.getElementById('per').onchange  = (e) => { PER = parseInt(e.target.value, 10) || 20; PAGE = 1; load(); };
+
+load();
+setInterval(load, 15000); // auto-refresh
+</script>
+</body>
+</html>

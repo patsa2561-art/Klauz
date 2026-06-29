@@ -9,9 +9,26 @@ import os from 'node:os';
 import { semanticDiff } from './diff.js';
 import { extractText } from './extract.js';
 import { ping } from './ollama.js';
+import { logVisit, readVisits } from './visits.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const HTML = fs.readFileSync(path.join(__dirname, '..', 'public', 'index.html'), 'utf8');
+const ADMIN_HTML = fs.readFileSync(path.join(__dirname, '..', 'public', 'admin.html'), 'utf8');
+
+// Admin gate — defaults are demo values; override in production via env vars.
+const ADMIN_USER = process.env.KLAUZ_ADMIN_USER || 'pat007';
+const ADMIN_PASS = process.env.KLAUZ_ADMIN_PASS || '093111';
+// Paths we don't want polluting the visit log (admin self-views, health checks, etc).
+const SKIP_LOG = /^\/(admin007|health|capabilities|favicon)/;
+
+function checkAdminAuth(req) {
+  const h = req.headers.authorization || '';
+  if (!h.startsWith('Basic ')) return false;
+  try {
+    const [u, p] = Buffer.from(h.slice(6), 'base64').toString('utf8').split(':');
+    return u === ADMIN_USER && p === ADMIN_PASS;
+  } catch { return false; }
+}
 
 function readBody(req) {
   return new Promise((resolve) => {
@@ -24,6 +41,27 @@ function readBody(req) {
 export function serve(port = 7700, opts = {}) {
   const server = http.createServer(async (req, res) => {
     try {
+      // Visit logger — silently records IP/country/path for the admin page.
+      // Skips noisy endpoints + the admin page itself so it doesn't pollute the log.
+      if (!SKIP_LOG.test(req.url || '')) logVisit(req);
+
+      // ADMIN — HTTP Basic auth; /admin007 HTML + /admin007/data JSON (paginated).
+      if (req.method === 'GET' && (req.url === '/admin007' || req.url.startsWith('/admin007?') || req.url.startsWith('/admin007/'))) {
+        if (!checkAdminAuth(req)) {
+          res.writeHead(401, { 'WWW-Authenticate': 'Basic realm="Klauz Admin", charset="UTF-8"', 'Content-Type': 'text/plain' });
+          return res.end('Authentication required');
+        }
+        const u = new URL(req.url, 'http://x');
+        if (u.pathname === '/admin007/data') {
+          const page = parseInt(u.searchParams.get('page') || '1', 10) || 1;
+          const per = parseInt(u.searchParams.get('per') || '20', 10) || 20;
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify(readVisits(page, Math.min(50, Math.max(5, per)))));
+        }
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        return res.end(ADMIN_HTML);
+      }
+
       if (req.method === 'GET' && (req.url === '/' || req.url === '/index.html')) {
         res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
         return res.end(HTML);

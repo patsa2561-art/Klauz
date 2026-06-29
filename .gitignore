@@ -48,3 +48,7 @@ examples/thai.pdf
 examples/thai.xlsx
 examples/scanned.pdf
 examples/contract-scan.png
+
+# admin visit log (server-side, do not commit)
+.klauz-visits.log
+.klauz-visits.log.*
