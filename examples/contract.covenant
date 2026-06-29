@@ -1,0 +1,7 @@
+# Semantic Covenant — meaning-invariants that every edit must respect
+@invariant fairness   : power Provider <= 70%
+@invariant duties     : no-weaken
+@invariant coverage   : no-negation-flip
+@invariant cap        : freeze "liability"
+@invariant safety     : max-risk medium
+@invariant signoff    : require-approvals 2

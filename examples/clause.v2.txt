@@ -1,0 +1,1 @@
+The Provider shall encrypt all customer data at rest, and shall notify the Client within 72 hours of any breach.

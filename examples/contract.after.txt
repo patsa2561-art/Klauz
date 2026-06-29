@@ -1,0 +1,17 @@
+SERVICE AGREEMENT
+
+1. Payment. The Client shall pay all invoices within 45 days of receipt.
+
+2. Confidentiality. Each party must keep the other party's confidential information secret for a period of 5 years.
+
+3. Liability. The Provider's total liability is unlimited.
+
+4. Termination. Either party may terminate this agreement for cause with 60 days written notice.
+
+5. Data. The Provider may encrypt customer data at rest.
+
+6. Warranty. The warranty does not cover defects in workmanship.
+
+7. Governing Law. This agreement is governed by the laws of Singapore.
+
+8. Indemnification. The Client shall indemnify the Provider against all third-party claims.

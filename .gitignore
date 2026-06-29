@@ -1,0 +1,50 @@
+# >>> mneme auto-managed (do not edit between sentinels) <<<
+# AI tooling artifacts -- never commit. Mneme manages this block.
+.mneme/
+.brain-*
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.cursor/
+.cursorrules
+.cursorignore
+.aider*
+.continue/
+.windsurfrules
+.codeium/
+.claude/
+.claude.json
+.claudeignore
+.github/copilot-instructions.md
+.mneme-ritual-receipt.json
+# <<< mneme auto-managed >>>
+
+# deps & build artifacts
+node_modules/
+*.log
+*.err
+
+# PCR signing key — NEVER commit the ed25519 private key
+.meaningdiff/
+*.pcr.key
+
+# portable bundle artifacts (huge — built, not committed)
+/node/
+*.zip
+meaningdiff-portable*/
+difftest.json
+dt.json
+examples/sample.docx
+examples/sample.xlsx
+examples/contract-scan.png
+examples/scan.before.png
+examples/scan.after.png
+examples/big.docx
+examples/big.pdf
+examples/dense.png
+examples/table.png
+examples/thai.docx
+examples/thai.pdf
+examples/thai.xlsx
+examples/scanned.pdf
+examples/contract-scan.png

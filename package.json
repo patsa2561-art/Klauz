@@ -1,0 +1,36 @@
+{
+  "name": "klauz",
+  "version": "0.1.0",
+  "description": "Semantic diff engine — tracks meaning, not characters. Flags meaning-changing edits in contracts, docs, policy & i18n.",
+  "type": "module",
+  "bin": {
+    "meaningdiff": "bin/meaningdiff.js"
+  },
+  "scripts": {
+    "test": "node test/all.test.mjs",
+    "eval": "node test/evaluate.js",
+    "eval:favor": "node test/evaluate-favor.js",
+    "eval:selective": "node test/eval-selective.mjs",
+    "eval:tribunal": "node test/eval-tribunal.mjs",
+    "eval:thai": "node test/eval-tribunal.mjs thai-corpus.json",
+    "fullloop": "node test/fullloop.mjs",
+    "demo": "node bin/meaningdiff.js examples/contract.before.txt examples/contract.after.txt"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "config": {
+    "ollamaHost": "http://127.0.0.1:11434",
+    "embedModel": "bge-m3",
+    "judgeModel": "gemma3:12b"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "docx": "^9.7.1",
+    "mammoth": "^1.12.0",
+    "pdf-parse": "^2.4.5",
+    "pdfkit": "^0.18.0",
+    "sharp": "^0.34.5",
+    "xlsx": "^0.18.5"
+  }
+}

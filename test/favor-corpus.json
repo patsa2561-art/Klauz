@@ -1,0 +1,18 @@
+{
+  "description": "Ground-truth for Power-Shift direction. Each edit has an objectively-correct favored party (a lawyer would agree). Used to measure favor-direction accuracy honestly. Parties are always [A, B] as written.",
+  "parties": ["Provider", "Client"],
+  "pairs": [
+    { "id": "f1", "old": "The Provider shall encrypt all customer data.", "new": "The Provider may encrypt customer data.", "favors": "Provider", "note": "obligation on Provider relaxed -> Provider benefits" },
+    { "id": "f2", "old": "The Provider's liability is capped at fees paid.", "new": "The Provider's liability is unlimited.", "favors": "Client", "note": "cap removed -> Client can recover more" },
+    { "id": "f3", "old": "The Client shall pay within 30 days.", "new": "The Client shall pay within 60 days.", "favors": "Client", "note": "Client gets more time" },
+    { "id": "f4", "old": "The warranty covers all defects.", "new": "The warranty does not cover defects.", "favors": "Provider", "note": "Provider escapes warranty duty" },
+    { "id": "f5", "old": "The Client may terminate at any time.", "new": "The Client may terminate only for cause.", "favors": "Provider", "note": "Client's exit restricted -> Provider benefits" },
+    { "id": "f6", "old": "The Provider must deliver within 7 days.", "new": "The Provider must deliver within 30 days.", "favors": "Provider", "note": "Provider gets more time" },
+    { "id": "f7", "old": "The Client owns all resulting IP.", "new": "The Provider owns all resulting IP.", "favors": "Provider", "note": "IP ownership flipped to Provider" },
+    { "id": "f8", "old": "Late payment incurs a 2% fee.", "new": "Late payment incurs a 10% fee.", "favors": "Provider", "note": "higher penalty paid to Provider" },
+    { "id": "f9", "old": "The Provider indemnifies the Client against claims.", "new": "The Client indemnifies the Provider against claims.", "favors": "Provider", "note": "indemnity burden moved to Client" },
+    { "id": "f10", "old": "The Client may audit the Provider annually.", "new": "The Client may not audit the Provider.", "favors": "Provider", "note": "Client loses audit right" },
+    { "id": "f11", "old": "Confidentiality lasts 1 year.", "new": "Confidentiality lasts 10 years.", "favors": "Client", "note": "longer protection of Client's disclosed info (Client is typically the discloser here)" },
+    { "id": "f12", "old": "The Provider grants unlimited revisions.", "new": "The Provider grants up to 2 revisions.", "favors": "Provider", "note": "Provider's work obligation reduced" }
+  ]
+}

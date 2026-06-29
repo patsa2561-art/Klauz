@@ -1,0 +1,27 @@
+[Unit]
+Description=meaningdiff — semantic contract diff (deterministic mode)
+After=network.target
+
+[Service]
+Type=simple
+User=meaningdiff
+WorkingDirectory=/opt/meaningdiff
+ExecStart=/usr/bin/node /opt/meaningdiff/bin/meaningdiff.js serve 7700
+# Public bind — Caddy reverse-proxies from 127.0.0.1 anyway, but listening on
+# loopback only is safer if Caddy is on the same box.
+Environment=MEANINGDIFF_HOST=127.0.0.1
+# Force rules-only engine: no Ollama on this droplet (2 GB RAM can't run a judge).
+Environment=MEANINGDIFF_ENGINE=heuristic
+# Tell autoConfigure not to hit Ollama (saves a 4 s probe per request).
+Environment=MEANINGDIFF_OLLAMA=http://127.0.0.1:1
+Restart=on-failure
+RestartSec=3
+
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

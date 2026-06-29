@@ -1,0 +1,20 @@
+{
+  "description": "Thai-language ground-truth pairs. meaning_changed labeled by clear legal/logical criteria. Measures TH accuracy of the proof-tier (pcr core: ต้อง/อาจ/ควร, ไม่/ห้าม, numbers) + the LLM tier.",
+  "pairs": [
+    { "id": "th_id1", "old": "ชำระเงิน  ภายใน 30 วัน", "new": "ชำระเงินภายใน 30 วัน", "meaning_changed": false, "note": "whitespace only" },
+    { "id": "th_modal1", "old": "ผู้ให้บริการต้องเข้ารหัสข้อมูล", "new": "ผู้ให้บริการอาจเข้ารหัสข้อมูล", "meaning_changed": true, "note": "ต้อง→อาจ (บังคับ→ทางเลือก)" },
+    { "id": "th_modal2", "old": "พนักงานต้องเข้าอบรม", "new": "พนักงานควรเข้าอบรม", "meaning_changed": true, "note": "ต้อง→ควร (บังคับ→อ่อน)" },
+    { "id": "th_num1", "old": "ชำระภายใน 30 วัน", "new": "ชำระภายใน 60 วัน", "meaning_changed": true, "note": "30→60 วัน" },
+    { "id": "th_num2", "old": "ค่าปรับ 5%", "new": "ค่าปรับ 15%", "meaning_changed": true, "note": "5%→15%" },
+    { "id": "th_neg1", "old": "ผู้ใช้สามารถลบบัญชีได้", "new": "ผู้ใช้ไม่สามารถลบบัญชีได้", "meaning_changed": true, "note": "เพิ่ม 'ไม่'" },
+    { "id": "th_neg2", "old": "การรับประกันครอบคลุมความเสียหาย", "new": "การรับประกันไม่ครอบคลุมความเสียหาย", "meaning_changed": true, "note": "เพิ่มการปฏิเสธ" },
+    { "id": "th_syn1", "old": "ผู้ให้บริการต้องแจ้งลูกค้า", "new": "ผู้ให้บริการจะต้องแจ้งลูกค้า", "meaning_changed": false, "note": "ต้อง↔จะต้อง (บังคับเหมือนกัน)" },
+    { "id": "th_scope1", "old": "พนักงานทุกคนต้องเซ็นสัญญา", "new": "พนักงานประจำทุกคนต้องเซ็นสัญญา", "meaning_changed": true, "note": "ขอบเขตแคบลง (ประจำ)" },
+    { "id": "th_scope2", "old": "ข้อมูลลับรวมถึงข้อมูลการเงิน", "new": "ข้อมูลลับรวมถึงข้อมูลการเงินและข้อมูลลูกค้า", "meaning_changed": true, "note": "ขอบเขตกว้างขึ้น" },
+    { "id": "th_def1", "old": "วันทำการหมายถึงจันทร์ถึงศุกร์", "new": "วันทำการหมายถึงจันทร์ถึงเสาร์", "meaning_changed": true, "note": "นิยามเปลี่ยน (คำ ไม่ใช่ตัวเลข)" },
+    { "id": "th_cond1", "old": "คืนเงินภายใน 14 วัน", "new": "คืนเงินภายใน 14 วันหากแจ้งล่วงหน้า", "meaning_changed": true, "note": "เพิ่มเงื่อนไข (ตัวเลขเท่าเดิม)" },
+    { "id": "th_party1", "old": "ผู้ซื้อต้องชดใช้ผู้ขาย", "new": "ผู้ขายต้องชดใช้ผู้ซื้อ", "meaning_changed": true, "note": "สลับคู่สัญญา" },
+    { "id": "th_syn2", "old": "ผู้ขายต้องส่งมอบสินค้าโดยเร็ว", "new": "ผู้ขายต้องส่งมอบสินค้าโดยพลัน", "meaning_changed": false, "note": "โดยเร็ว≈โดยพลัน (คำพ้อง)" },
+    { "id": "th_combo1", "old": "ผู้ให้บริการต้องเข้ารหัสข้อมูลทั้งหมด", "new": "ผู้ให้บริการอาจเข้ารหัสข้อมูล", "meaning_changed": true, "note": "modal+ขอบเขต (รวม) → ไม่ใช่มิติเดียว" }
+  ]
+}
