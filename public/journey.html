@@ -115,6 +115,69 @@
   .empty p { margin: 0 0 16px; font-size: 14px; }
   .empty a { color: var(--accent); font-weight: 600; }
 
+  /* Hero status banner — the one thing every user sees first. */
+  .status-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin: 22px 0 28px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+  }
+  .status-card.ok      { border-color: var(--ok);     background: linear-gradient(180deg, var(--ok-soft), var(--surface) 70%); }
+  .status-card.broken  { border-color: var(--danger); background: linear-gradient(180deg, var(--danger-soft), var(--surface) 70%); }
+  .status-card.empty-state { border-style: dashed; }
+  .status-icon { font-size: 44px; line-height: 1; flex-shrink: 0; }
+  .status-body { flex: 1; min-width: 260px; }
+  .status-h    { font: 600 22px/1.2 var(--serif); margin: 0 0 6px; }
+  .status-h.ok     { color: var(--ok); }
+  .status-h.broken { color: var(--danger); }
+  .status-sub  { color: var(--text-2); font-size: 13.5px; line-height: 1.5; margin: 0; }
+  .status-sub code { font-size: 11.5px; background: var(--surface-2); padding: 2px 6px; border-radius: 3px; }
+  .status-cta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .btn-primary {
+    background: var(--accent); color: white; border: 0; border-radius: 8px;
+    padding: 12px 20px; font: 600 14px var(--sans); cursor: pointer;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+  /* The "⋯ More" menu — pure-HTML <details> styled as a dropdown */
+  .more-menu { position: relative; }
+  .more-menu > summary {
+    list-style: none; cursor: pointer; user-select: none;
+    background: transparent; color: var(--text-2);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 14px; font: 600 13px var(--sans);
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .more-menu > summary::-webkit-details-marker { display: none; }
+  .more-menu > summary:hover { background: var(--surface-2); border-color: var(--text-3); }
+  .more-menu[open] > summary { background: var(--surface-2); }
+  .more-menu .more-list {
+    position: absolute; right: 0; top: calc(100% + 6px);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; box-shadow: 0 10px 30px rgb(0 0 0 / .12);
+    padding: 6px; min-width: 240px; z-index: 50;
+    display: flex; flex-direction: column; gap: 1px;
+  }
+  .more-list button {
+    background: transparent; color: var(--text); border: 0; border-radius: 6px;
+    padding: 10px 12px; font: 500 13px var(--sans); cursor: pointer;
+    text-align: left; display: flex; align-items: center; gap: 8px;
+  }
+  .more-list button:hover { background: var(--surface-2); }
+  .more-list button.danger { color: var(--danger); }
+  .more-list button.danger:hover { background: var(--danger-soft); }
+  .more-list hr { border: 0; border-top: 1px solid var(--border); margin: 4px 6px; }
+
+  /* Educational content (3 cards + How-to-start) — hidden once user has data */
+  .edu { transition: opacity .2s; }
+  .edu.compact { display: none; }
+
   @media (max-width: 720px) {
     .shell { padding: 24px 18px 60px; }
     h1 { font-size: 24px; }
@@ -145,81 +208,64 @@
     <i>"I reviewed this contract on date X and saw problems Y"</i> — and no one can fake or alter it.
   </p>
 
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0 22px 0">
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
-      <div style="font-size:22px;margin-bottom:4px">🕒</div>
-      <div style="font:600 13.5px var(--sans);margin-bottom:3px" data-i18n="card1_h">When did I see this clause?</div>
-      <div style="color:var(--text-2);font-size:12.5px;line-height:1.5" data-i18n="card1_p">Every review is timestamped. Browse back through any contract you've touched.</div>
-    </div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
-      <div style="font-size:22px;margin-bottom:4px">🔐</div>
-      <div style="font:600 13.5px var(--sans);margin-bottom:3px" data-i18n="card2_h">Can someone fake it?</div>
-      <div style="color:var(--text-2);font-size:12.5px;line-height:1.5" data-i18n="card2_p">No. Every entry is linked to the previous one with SHA-256. Any tampering breaks the chain — visibly.</div>
-    </div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
-      <div style="font-size:22px;margin-bottom:4px">🏠</div>
-      <div style="font:600 13.5px var(--sans);margin-bottom:3px" data-i18n="card3_h">Where's my data?</div>
-      <div style="color:var(--text-2);font-size:12.5px;line-height:1.5" data-i18n="card3_p">Only in your browser's localStorage. Klauz the server cannot see it. Clearing browser data wipes it.</div>
-    </div>
-  </div>
-
-  <div style="background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:24px;display:flex;gap:12px;align-items:flex-start">
-    <span style="font-size:20px;line-height:1">💡</span>
-    <div style="font-size:13.5px;line-height:1.55" data-i18n="howto">
-      <b>How to start:</b> go to <a href="/" style="color:var(--accent);font-weight:600">the main Klauz page</a>,
-      paste a contract, click <b>Tripwire</b>, then click <b>Save to Journey</b>. Your first chain entry appears below.
-      In court or negotiation, export the chain (one button) and anyone can verify it without trusting Klauz.
+  <!-- Educational content — shown to first-time visitors, hidden once they have data -->
+  <div id="eduSection" class="edu">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0 22px 0">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+        <div style="font-size:22px;margin-bottom:4px">🕒</div>
+        <div style="font:600 13.5px var(--sans);margin-bottom:3px" data-i18n="card1_h">When did I see this clause?</div>
+        <div style="color:var(--text-2);font-size:12.5px;line-height:1.5" data-i18n="card1_p">Every review is timestamped. Browse back through any contract you've touched.</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+        <div style="font-size:22px;margin-bottom:4px">🔐</div>
+        <div style="font:600 13.5px var(--sans);margin-bottom:3px" data-i18n="card2_h">Can someone fake it?</div>
+        <div style="color:var(--text-2);font-size:12.5px;line-height:1.5" data-i18n="card2_p">No. Every entry is linked to the previous one with SHA-256. Any tampering breaks the chain — visibly.</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+        <div style="font-size:22px;margin-bottom:4px">🏠</div>
+        <div style="font:600 13.5px var(--sans);margin-bottom:3px" data-i18n="card3_h">Where's my data?</div>
+        <div style="color:var(--text-2);font-size:12.5px;line-height:1.5" data-i18n="card3_p">Only in your browser's localStorage. Klauz the server cannot see it. Clearing browser data wipes it.</div>
+      </div>
     </div>
   </div>
 
+  <!-- THE one thing every user sees first: status banner. Auto-rendered on load. -->
+  <div id="statusCard"></div>
+
+  <!-- Stats (only when user has data) -->
   <div class="stats" id="stats"></div>
 
-  <div class="actions-row">
-    <button onclick="exportJourney()" data-i18n="export_journey_btn">⬇ Export journey</button>
-    <button class="ghost" onclick="exportCombined()" data-i18n="export_all_btn">⬇ Export everything (journey + chain)</button>
-    <button class="ghost" onclick="importJourney()" data-i18n="import_btn">⬆ Import…</button>
-    <input type="file" id="importFile" accept=".json,application/json" style="display:none" onchange="onImport(this)" />
-    <button class="danger" onclick="clearJourney()" style="margin-left:auto" data-i18n="clear_all_btn">Clear all</button>
-  </div>
-  <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin:-6px 0 22px 0;font-size:12.5px;color:var(--text-2);line-height:1.55">
-    <b data-i18n="import_help_title">📥 What can I import?</b>
-    <span data-i18n="import_help_body"> Any file that Klauz itself exported: a journey JSON (from <i>Export journey</i>), a chain JSON (from <i>Export chain</i> inside the Verifiable Chain panel below), or a combined file (from <i>Export everything</i>). You can also import a single journey entry — Klauz will wrap it for you.</span>
-    <a href="#" onclick="downloadExample(event)" style="color:var(--accent);font-weight:600;margin-left:6px" data-i18n="import_help_example">⬇ Download example file</a>
+  <!-- Cross-reference (only when there are recurring patterns) -->
+  <div id="crossrefSection" style="display:none">
+    <div class="section-h" data-i18n="crossref_h">Cross-reference · clauses you've seen before</div>
+    <div id="crossref"></div>
   </div>
 
-  <div class="section-h">Cross-reference · clauses you've seen before</div>
-  <div id="crossref"></div>
-
-  <div class="section-h" style="display:flex;align-items:center;gap:10px">
-    <span>Verifiable Chain</span>
-    <span style="font:600 10px var(--sans);letter-spacing:.1em;background:var(--accent-soft);color:var(--accent);padding:3px 7px;border-radius:4px">NEW · WORLD-FIRST</span>
-  </div>
-  <div id="chainPanel" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:24px">
-    <p style="margin:0 0 12px 0;color:var(--text-2);font-size:13px">
-      Every review you save is cryptographically linked to the previous one (SHA-256 hash chain).
-      Anyone — your lawyer, a court, a counterparty — can verify the chain has not been
-      retroactively edited. No vendor trust required: the verifier is open-source and the
-      math is in your browser. <b>First-of-its-kind in the legal-tech space.</b>
-    </p>
-    <div id="chainStatus" style="font:600 14px var(--sans);margin:10px 0"></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-      <button id="chainVerifyBtn" onclick="verifyMyChain()" data-i18n="verify_btn">✓ Verify my chain</button>
-      <button id="chainExportBtn" class="ghost" onclick="exportMyChain()" data-i18n="export_chain_btn">⬇ Export chain (.json)</button>
-      <button id="chainAnchorBtn" class="ghost" onclick="copyLastLink()" data-i18n="anchor_btn">📎 Copy last link (anchor)</button>
+  <!-- Timeline (only when user has data) -->
+  <div id="timelineSection" style="display:none">
+    <div class="section-h" style="display:flex;align-items:center;justify-content:space-between">
+      <span data-i18n="timeline_h">Your reviews</span>
+      <details class="more-menu">
+        <summary>⋯ <span data-i18n="more_menu" style="margin-left:2px">More actions</span></summary>
+        <div class="more-list">
+          <button onclick="verifyMyChain()" data-i18n="menu_verify">✓ Re-verify chain</button>
+          <button onclick="copyLastLink()" data-i18n="menu_anchor">📎 Copy anchor link</button>
+          <hr/>
+          <button onclick="exportMyChain()" data-i18n="menu_export_chain">⬇ Export chain (.json)</button>
+          <button onclick="exportCombined()" data-i18n="menu_export_all">⬇ Export everything (backup)</button>
+          <button onclick="importJourney()" data-i18n="menu_import">⬆ Import a file…</button>
+          <hr/>
+          <button class="danger" onclick="clearJourney()" data-i18n="menu_clear">🗑 Reset everything</button>
+        </div>
+      </details>
     </div>
-    <details style="margin-top:14px;color:var(--text-2);font-size:12.5px">
-      <summary style="cursor:pointer" data-i18n="why_matters">Why does this matter?</summary>
-      <ul style="margin:8px 0 0 0;padding-left:18px;line-height:1.6">
-        <li data-i18n="why_1"><b>Tamper-evident:</b> any retroactive change to a past review breaks the chain at that point — caught instantly by re-verification.</li>
-        <li data-i18n="why_2"><b>Vendor-independent:</b> the same verifier runs in your browser, on the Klauz server (<code>POST /chain/verify</code>), and in any third-party Node script that imports <code>src/chain.js</code>.</li>
-        <li data-i18n="why_3"><b>Court-admissible:</b> export the JSON and the engine_hash trail proves you reviewed contract X on date Y with rule version Z — without anyone having to trust Klauz.</li>
-        <li data-i18n="why_4"><b>Anchor against total rewrite:</b> copy the latest link and post it somewhere external (email to self, a tweet, your own gist). Any future rewrite of the tail is detectable against the anchor.</li>
-      </ul>
-    </details>
+    <div id="timeline"></div>
   </div>
 
-  <div class="section-h">Timeline</div>
-  <div id="timeline"></div>
+  <input type="file" id="importFile" accept=".json,application/json" style="display:none" onchange="onImport(this)" />
+
+  <!-- Empty timeline state (shown when no entries) -->
+  <div id="emptyTimeline"></div>
 </main>
 
 <script src="/chain.js"></script>
@@ -284,6 +330,27 @@ const I18N = {
     why_2: 'Vendor-independent: the same verifier runs in your browser, on the Klauz server (POST /chain/verify), and in any third-party Node script that imports src/chain.js.',
     why_3: 'Court-admissible: export the JSON and the engine_hash trail proves you reviewed contract X on date Y with rule version Z — without anyone having to trust Klauz.',
     why_4: 'Anchor against total rewrite: copy the latest link and post it somewhere external (email to self, a tweet, your own gist). Any future rewrite of the tail is detectable against the anchor.',
+    // Status card (the hero) — three states
+    s_empty_h: 'Nothing here yet',
+    s_empty_p: 'Go to the main Klauz page, paste a contract, run Tripwire, then click Save to Journey. The result appears here — no further setup needed.',
+    s_empty_cta: 'Start reviewing',
+    s_ok_h: 'All %s reviews verified',
+    s_ok_p: 'No tampering detected. Latest anchor:',
+    s_ok_cta: 'Copy anchor',
+    s_broken_h: 'Tampering detected',
+    s_broken_p: 'Chain breaks at entry [%s] — reason: %s.',
+    s_nochain_h: '%s reviews — chain not yet started',
+    s_nochain_p: 'These reviews were imported without a verifiable chain. Run a new Tripwire scan and Save it from the main page to start building one.',
+    // Section headers + ⋯ menu
+    crossref_h: 'Patterns repeated across your reviews',
+    timeline_h: 'Your reviews',
+    more_menu: 'More actions',
+    menu_verify: '✓ Re-verify chain',
+    menu_anchor: '📎 Copy anchor link',
+    menu_export_chain: '⬇ Export chain (.json)',
+    menu_export_all: '⬇ Export everything (backup)',
+    menu_import: '⬆ Import a file…',
+    menu_clear: '🗑 Reset everything',
   },
   th: {
     journey_pill: 'บันทึก',
@@ -339,6 +406,27 @@ const I18N = {
     why_2: 'ไม่ต้องเชื่อ vendor: ตัว verifier เดียวกันรันได้ทั้งในเบราว์เซอร์, บนเซิร์ฟเวอร์ Klauz (POST /chain/verify), หรือใน Node script ใดๆ ที่ import src/chain.js',
     why_3: 'ใช้ในศาลได้: export JSON ออกมา + engine_hash trail พิสูจน์ได้ว่าคุณตรวจสัญญา X วันที่ Y ด้วยกฎเวอร์ชัน Z — โดยไม่ต้องมีใครเชื่อ Klauz',
     why_4: 'ยึดกัน rewrite ทั้งหาง: copy link ล่าสุดไปโพสต์ภายนอก (email หาตัวเอง, tweet, gist) ถ้ามีใคร rewrite ตอนท้ายของ chain เราตรวจได้กับ anchor นั้น',
+    // Status card (hero) — three states
+    s_empty_h: 'ยังไม่มีรายการ',
+    s_empty_p: 'ไปที่หน้า Klauz หลัก วางสัญญา กด Tripwire แล้วกด Save to Journey · ผลจะมาขึ้นที่นี่อัตโนมัติ ไม่ต้องตั้งค่าอะไรเพิ่ม',
+    s_empty_cta: 'เริ่มตรวจสัญญา',
+    s_ok_h: 'รีวิวทั้ง %s รายการ ผ่านการตรวจสอบ',
+    s_ok_p: 'ไม่พบการแก้ย้อนหลัง · anchor ล่าสุด:',
+    s_ok_cta: 'คัดลอก anchor',
+    s_broken_h: 'พบการแก้ย้อนหลัง',
+    s_broken_p: 'Chain ขาดที่รายการ [%s] · สาเหตุ: %s',
+    s_nochain_h: '%s รีวิว · ยังไม่ได้เริ่ม chain',
+    s_nochain_p: 'รีวิวเหล่านี้นำเข้ามาแบบไม่มี verifiable chain · ตรวจสัญญาใหม่หนึ่งครั้งและ Save จากหน้าหลัก จะเริ่มสร้าง chain ได้',
+    // Sections + ⋯ menu
+    crossref_h: 'ข้อสัญญาที่ขึ้นซ้ำในประวัติของคุณ',
+    timeline_h: 'รีวิวของคุณ',
+    more_menu: 'เพิ่มเติม',
+    menu_verify: '✓ ตรวจสอบ chain อีกครั้ง',
+    menu_anchor: '📎 คัดลอก anchor link',
+    menu_export_chain: '⬇ ดาวน์โหลด chain (.json)',
+    menu_export_all: '⬇ ดาวน์โหลดทุกอย่าง (สำรอง)',
+    menu_import: '⬆ นำเข้าไฟล์…',
+    menu_clear: '🗑 รีเซ็ตทั้งหมด',
   },
 };
 let LANG = (() => {
@@ -354,8 +442,21 @@ function setLang(l) {
   LANG = l;
   try { localStorage.setItem(LANG_KEY, l); } catch {}
   applyI18n();
-  render(); renderChainStatus();
+  render();
 }
+
+// Auto-close the ⋯ menu after any action OR on outside click.
+document.addEventListener('click', (e) => {
+  const open = document.querySelector('.more-menu[open]');
+  if (!open) return;
+  // Click on a menu item OR anywhere outside the menu → close it.
+  const inSummary = e.target.closest('summary');
+  if (!inSummary || open.contains(e.target) === false) {
+    if (e.target.closest('.more-list button') || !open.contains(e.target)) {
+      open.removeAttribute('open');
+    }
+  }
+});
 function applyI18n() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const k = el.getAttribute('data-i18n');
@@ -413,22 +514,35 @@ function save(entries) {
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function fmtDate(iso) { try { return new Date(iso).toISOString().slice(0,10) + ' · ' + new Date(iso).toTimeString().slice(0,5); } catch { return iso; } }
 
-function render() {
+// One unified render that:
+//   1. Always shows the right status card (auto-verifies the chain).
+//   2. Hides educational + sections that have no data.
+//   3. Shows only the timeline + ⋯ menu once the user has data.
+async function render() {
   const entries = load();
-  // sort newest first
   entries.sort((a,b) => (b.ts || '').localeCompare(a.ts || ''));
 
-  if (entries.length === 0) {
+  // Auto-verify chain on load — user does not need to click anything.
+  let chain = { version: CHAIN_VERSION, chain: [] };
+  let verifyResult = { ok: true, length: 0 };
+  if (window.KlauzChain) {
+    chain = await window.KlauzChain.loadChain();
+    verifyResult = await window.KlauzChain.verifyChain(chain);
+  }
+  renderStatusCard(entries, chain, verifyResult);
+
+  // Show or hide major sections based on whether the user has data.
+  const hasData = entries.length > 0 || chain.chain.length > 0;
+  document.getElementById('eduSection').classList.toggle('compact', hasData);
+  document.getElementById('timelineSection').style.display = hasData ? '' : 'none';
+
+  if (!hasData) {
     document.getElementById('stats').innerHTML = '';
-    document.getElementById('crossref').innerHTML = '';
-    document.getElementById('timeline').innerHTML =
-      '<div class="empty">' +
-        '<h2>' + t('no_entries_h') + '</h2>' +
-        '<p>' + t('no_entries_p') + '</p>' +
-        '<p style="font-size:12px;color:var(--text-3)">' + t('no_entries_q') + '</p>' +
-      '</div>';
+    document.getElementById('crossrefSection').style.display = 'none';
+    document.getElementById('emptyTimeline').innerHTML = '';
     return;
   }
+  document.getElementById('emptyTimeline').innerHTML = '';
 
   // stats
   const uniqueParties = new Set();
@@ -452,7 +566,8 @@ function render() {
     '<div class="stat"><div class="label">' + t('stat_parties')  + '</div><div class="num">' + uniqueParties.size + '</div></div>' +
     '<div class="stat small"><div class="label">' + t('stat_common') + '</div><div class="num">' + esc(topCat ? topCat[0] : '—') + '</div></div>';
 
-  // cross-reference — clauses appearing in 2+ entries
+  // cross-reference — show ONLY if there are actual recurring patterns;
+  // otherwise hide the whole section to reduce visual noise.
   const recurring = Object.entries(labelCount).filter(([,n]) => n >= 2).sort((a,b)=>b[1]-a[1]);
   if (recurring.length) {
     let crh = '<div class="crossref">';
@@ -462,8 +577,9 @@ function render() {
     }
     crh += '</div>';
     document.getElementById('crossref').innerHTML = crh;
+    document.getElementById('crossrefSection').style.display = '';
   } else {
-    document.getElementById('crossref').innerHTML = '<div class="muted" style="color:var(--text-3);font-size:13px;padding:8px 0">' + t('crossref_empty') + '</div>';
+    document.getElementById('crossrefSection').style.display = 'none';
   }
 
   // timeline
@@ -487,7 +603,7 @@ function clearJourney() {
   if (!confirm(t('confirm_clear'))) return;
   localStorage.removeItem(KEY);
   if (window.KlauzChain) window.KlauzChain.resetChain();
-  render(); renderChainStatus();
+  render();
 }
 
 function exportJourney() {
@@ -596,7 +712,7 @@ async function onImport(input) {
     }
   }
 
-  render(); renderChainStatus();
+  render();
   input.value = '';
 
   const lines = [t('import_dialog_title') + ':', ''];
@@ -632,52 +748,83 @@ async function appendChainFromEntry(entry) {
   }
 }
 
-async function renderChainStatus() {
-  const el = document.getElementById('chainStatus');
-  if (!el || !window.KlauzChain) return;
-  const c = await window.KlauzChain.loadChain();
-  // also flip empty-state button styling: dim Verify / Export-chain / Anchor when nothing to verify
-  const dim = !c.chain.length;
-  for (const id of ['chainVerifyBtn','chainExportBtn','chainAnchorBtn']) {
-    const b = document.getElementById(id);
-    if (b) { b.disabled = dim; b.style.opacity = dim ? '0.5' : ''; b.style.cursor = dim ? 'not-allowed' : 'pointer'; }
-  }
-  if (!c.chain.length) {
-    el.innerHTML = '<span style="color:var(--text-3)">' + t('chain_empty') + '</span>';
+// The hero status card — the ONE thing every visitor sees first.
+// Four states: empty (CTA to main page), broken (red), no-chain (neutral —
+// imported entries without chain), verified (green). No buttons-to-think-about.
+function renderStatusCard(entries, chain, verify) {
+  const el = document.getElementById('statusCard');
+  if (!el) return;
+
+  // State 1: empty — single CTA, no decisions for the user.
+  if (chain.chain.length === 0 && entries.length === 0) {
+    el.innerHTML =
+      '<div class="status-card empty-state">' +
+        '<div class="status-icon">📋</div>' +
+        '<div class="status-body">' +
+          '<div class="status-h">' + t('s_empty_h') + '</div>' +
+          '<p class="status-sub">' + t('s_empty_p') + '</p>' +
+        '</div>' +
+        '<div class="status-cta">' +
+          '<a href="/" class="btn-primary">' + t('s_empty_cta') + ' →</a>' +
+        '</div>' +
+      '</div>';
     return;
   }
-  const last = c.chain[c.chain.length - 1];
+
+  // State 2: broken — red, prominent.
+  if (!verify.ok) {
+    const lastValid = verify.lastValidIndex ?? -1;
+    el.innerHTML =
+      '<div class="status-card broken">' +
+        '<div class="status-icon">⚠</div>' +
+        '<div class="status-body">' +
+          '<div class="status-h broken">' + t('s_broken_h') + '</div>' +
+          '<p class="status-sub">' + t('s_broken_p', String(verify.brokenAt ?? '?'), verify.reason || '?') +
+          ' ' + t('chain_partial') + lastValid + ' ' + t('chain_partial_2') + '</p>' +
+        '</div>' +
+      '</div>';
+    return;
+  }
+
+  // State 3: journey entries imported but no chain yet (legacy / pre-chain file).
+  // Neutral banner — not red, not green — just informative.
+  if (chain.chain.length === 0) {
+    el.innerHTML =
+      '<div class="status-card">' +
+        '<div class="status-icon">📓</div>' +
+        '<div class="status-body">' +
+          '<div class="status-h">' + t('s_nochain_h', String(entries.length)) + '</div>' +
+          '<p class="status-sub">' + t('s_nochain_p') + '</p>' +
+        '</div>' +
+      '</div>';
+    return;
+  }
+
+  // State 4: verified — quiet green; primary action is "Copy anchor" so the
+  // user can paste their proof of integrity into email/notes immediately.
+  const last = chain.chain[chain.chain.length - 1];
+  const lastShort = last.link.slice(0, 12) + '…' + last.link.slice(-6);
   el.innerHTML =
-    '<span style="color:var(--ok)">⛓ ' + c.chain.length + (LANG === 'th' ? ' รายการที่เชื่อมโยง' : ' linked entries') + '</span>' +
-    ' · ' + (LANG === 'th' ? 'link ล่าสุด:' : 'last link:') +
-    ' <code style="font-size:11px;background:var(--surface-2);padding:2px 6px;border-radius:3px">' +
-    last.link.slice(0, 16) + '…' + last.link.slice(-8) + '</code>' +
-    ' · ' + new Date(last.ts).toLocaleString();
+    '<div class="status-card ok">' +
+      '<div class="status-icon">✓</div>' +
+      '<div class="status-body">' +
+        '<div class="status-h ok">' + t('s_ok_h', String(chain.chain.length)) + '</div>' +
+        '<p class="status-sub">' + t('s_ok_p') + ' <code title="' + esc(last.link) + '">' + esc(lastShort) + '</code></p>' +
+      '</div>' +
+      '<div class="status-cta">' +
+        '<button class="btn-primary" onclick="copyLastLink()">📎 ' + t('s_ok_cta') + '</button>' +
+      '</div>' +
+    '</div>';
 }
 
+// Re-run verification when the user picks it from ⋯ menu.
 async function verifyMyChain() {
-  if (!window.KlauzChain) { alert('Chain library not loaded'); return; }
-  const c = await window.KlauzChain.loadChain();
-  const el = document.getElementById('chainStatus');
-  if (!c.chain.length) {
-    el.innerHTML = '<span style="color:var(--warn);font-weight:700">' + t('chain_nothing_to_verify') + '</span>';
-    return;
-  }
-  const r = await window.KlauzChain.verifyChain(c);
-  if (r.ok) {
-    el.innerHTML =
-      '<span style="color:var(--ok);font-weight:700">' + t('chain_verified') + '</span> · ' +
-      r.length + (LANG === 'th' ? ' รายการ · link ล่าสุด ' : ' entries · last link ') +
-      '<code style="font-size:11px;background:var(--ok-soft);padding:2px 6px;border-radius:3px;color:var(--ok)">' +
-      r.lastLink.slice(0, 16) + '…</code><br><span style="color:var(--text-2);font-size:12.5px">' + t('chain_no_tamper') + '</span>';
-  } else {
-    el.innerHTML =
-      '<span style="color:var(--danger);font-weight:700">' + t('chain_broken') + '</span>' +
-      (LANG === 'th' ? ' · รายการที่ [' : ' · entry [') + (r.brokenAt ?? '?') +
-      '] · ' + (LANG === 'th' ? 'สาเหตุ' : 'reason') + ': <code>' + (r.reason || '?') +
-      '</code><br><span style="color:var(--text-2);font-size:12.5px">' +
-      t('chain_partial') + (r.lastValidIndex ?? -1) + ' ' + t('chain_partial_2') + '</span>';
-  }
+  if (!window.KlauzChain) return;
+  // Just re-render — render() does auto-verify and refreshes the status card.
+  await render();
+  // Brief visual confirmation that the action ran.
+  const el = document.getElementById('statusCard');
+  if (el) { el.style.transition = 'transform .15s'; el.style.transform = 'scale(1.01)'; setTimeout(() => { el.style.transform = ''; }, 150); }
 }
 
 async function exportMyChain() {
@@ -707,13 +854,12 @@ window.klauzSaveToJourney = async function(entry) {
   const all = load();
   all.push(entry);
   save(all);
-  await renderChainStatus();
+  await render();
   return true;
 };
 
 applyI18n();
 render();
-renderChainStatus();
 
 // Light keyboard shortcut: Esc closes any open alerts (browser-native already), but we
 // also wire Enter on the file picker for accessibility — nothing to do explicitly.
